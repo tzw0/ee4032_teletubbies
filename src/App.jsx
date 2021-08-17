@@ -1,8 +1,22 @@
-import './App.scss';
+import './app.scss';
 import Web3 from 'web3'
 import { useEffect, useState } from 'react';
 import { SMART_CONTRACT_ABI, SMART_CONTRACT_ADDRESS } from './config'
 import { Button } from '@material-ui/core';
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+} from "react-router-dom";
+
+import Topbar from "./components/topbar/Topbar";
+import Home from "./components/home/Home";
+import Sell from "./components/sell/Sell";
+import Orders from "./components/orders/Orders";
+import Cart from "./components/cart/Cart";
+import Account from "./components/account/Account";
+import Footer from "./components/footer/Footer";
+
 
 function App() {
   const [account, setAccount] = useState('loading..')
@@ -58,16 +72,29 @@ function App() {
   loadBlockchainData();
 
   return (
-    <div className="App">
-      <h1>Teletubbies</h1>
-      <p>your account: {account}</p>
-      <p>your network: {network}</p>
-      <p>VarX: {varX}</p>
-      <p>Status: {status}</p>
+    <div className="app">
+      <Router>
+        <Topbar />
+        <div className="pages">
+          <Switch>
+            <Route path="/account" component={Account} />
+            <Route path="/store" component={Sell} />
+            <Route path="/orders" component={Orders} />
+            <Route path="/cart" component={Cart} />
+            <Route path="/test">
+              <h1>Teletubbies</h1>
+              <p>your account: {account}</p>
+              <p>your network: {network}</p>
+              <p>VarX: {varX}</p>
+              <p>Status: {status}</p>
+              <Button color="primary" variant="contained" onClick={() => { updateContractVarX().catch(function (e) { console.log("transaction failed"); setStatus("X is updated (transaction rejected)") }) }}>Change VarX</Button>
+            </Route>
+            <Route path="/" component={Home} />
+          </Switch>
+        </div>
+      </Router>
 
-      <Button color="primary" variant="contained" onClick={() => { updateContractVarX().catch(function (e) { console.log("transaction failed"); setStatus("X is updated (transaction rejected)") }) }}>Change VarX</Button>
-
-
+      <Footer />
     </div>
   );
 }

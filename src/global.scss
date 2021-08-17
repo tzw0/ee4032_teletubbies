@@ -1,0 +1,24 @@
+$mainColor: black;
+$background: white;
+$primaryColor: rgb(34, 149, 202);
+$primaryColorFaded: rgba(34, 149, 202, 0.55);
+$secondaryColor: rgb(255, 129, 56);
+$secondaryColorFaded: rgba(255, 129, 56, 0.55);
+$contentSize: 16px;
+
+//topbar
+$topBarBackgroundColor: rgb(26, 0, 0);
+$topBarFontColor: white;
+
+//interactivity
+
+//page config
+$maxPageWidth: 1110px;
+$minPageWidth: 720px;
+
+h1 {
+    color: $mainColor;
+    font-weight: 400;
+    font-size: 70px;
+    // font-family: 'Roboto Mono', sans-serif;s
+}

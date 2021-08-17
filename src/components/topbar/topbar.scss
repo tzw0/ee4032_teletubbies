@@ -1,0 +1,70 @@
+@import "../../global.scss";
+
+.topbar{
+    position: absolute;
+    top: 0;
+    left: 0;
+    display: flex;
+    align-items: center;
+    width: 100%;
+    min-width: $minPageWidth;
+    height: 70px;
+    background: $topBarBackgroundColor;
+    color: $topBarFontColor;
+    justify-content: space-between;
+
+    .left{
+        margin-left: 10px;
+        font-size: 35px;
+        a{
+            text-decoration: none;
+            color: inherit;
+        }
+
+        &:hover{
+            color: $primaryColor;
+        }
+    }
+
+    .center{
+        margin: 0 50px;
+        width: 100%;
+        max-width: 800px;
+        display: flex;
+        
+        align-items: center;
+
+        .search-btn{
+            z-index: 300;
+            font-size: 30px;
+            margin-left: -60px;
+
+            &:hover{
+                cursor: pointer;
+                color: $primaryColor;
+            }
+        }
+    }
+
+    .right{
+        display: flex;
+        flex-wrap: nowrap;
+        a{
+            color: $topBarFontColor;
+            font-size: 30px;
+            text-decoration: none;
+            padding: 7px;
+            border-radius: 7px;
+            margin: 0 5px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+
+            
+            &:hover{
+                color: $primaryColor;
+            }
+        }
+    }
+}
