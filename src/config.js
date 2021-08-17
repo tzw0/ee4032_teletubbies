@@ -1,4 +1,4 @@
-export const SMART_CONTRACT_ADDRESS = '0x711E2807a6b88f0FC2802E4e6aFCE2De032b6553';
+export const SMART_CONTRACT_ADDRESS = '0x302C81888c5857d3866Cd340ad7255ACAB6354A0';
 export const SMART_CONTRACT_ABI =
     [
         {
@@ -44,18 +44,22 @@ export const SMART_CONTRACT_ABI =
             "type": "function"
         },
         {
+            "constant": true,
+            "inputs": [],
+            "name": "varX",
+            "outputs": [
+                {
+                    "name": "",
+                    "type": "string"
+                }
+            ],
+            "payable": false,
+            "stateMutability": "view",
+            "type": "function"
+        },
+        {
             "anonymous": false,
             "inputs": [
-                {
-                    "indexed": true,
-                    "name": "id",
-                    "type": "uint256"
-                },
-                {
-                    "indexed": true,
-                    "name": "date",
-                    "type": "uint256"
-                },
                 {
                     "indexed": true,
                     "name": "value",
