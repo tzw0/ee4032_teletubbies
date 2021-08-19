@@ -45,7 +45,7 @@ export const queriedProductList = [
                 "deadline": 1629429273
             },
         ],
-        "status": 0
+        "status": -2
     },
     {
         "id": "1",
@@ -130,6 +130,21 @@ export const queriedProductList = [
         ],
         "expiry": 1629359273,
         "delivery": 1649869273,
+        "status": 2,
+        "schedule": [
+            {
+                "title": "Production Begins",
+                "deadline": 1629409273
+            },
+            {
+                "title": "Production Completed",
+                "deadline": 1629429273
+            },
+            {
+                "title": "Products Shipped",
+                "deadline": 1629429273
+            },
+        ],
     },
 ]
 
@@ -204,7 +219,17 @@ const PriceView = (props) => {
 const DatesRowView = (props) => {
     var expiryDate = new Date(0)
     expiryDate.setUTCSeconds(props.expiry)
-    var expiryStr = props.s === true ? expiryDate.toLocaleString().split(',')[0] : props.status
+    var expiryStr
+    switch (true) {
+        case props.status === -2:
+            expiryStr = "DEMAND NOT MET"
+            break
+        case props.status >= 0:
+            expiryStr = "ORDERS CLOSED"
+            break
+        default:
+            expiryStr = expiryDate.toLocaleString().split(',')[0]
+    }
 
     var deliveryDate = new Date(0)
     deliveryDate.setUTCSeconds(props.delivery)
@@ -212,7 +237,7 @@ const DatesRowView = (props) => {
 
     return (
         <div className="dates-row-view">
-            <Tooltip arrow title={expiryDate >= Date.now() ? <h5>Order Deadline</h5> : <h5>Order Deadline Reached</h5>}>
+            <Tooltip arrow title={props.status === -1 || props.status == null ? <h5>Order Deadline</h5> : <h5>Orders Closed</h5>}>
                 <div className="expiry"> {expiryStr} </div>
             </Tooltip>
             <Tooltip arrow title={<h5>get your order by this date</h5>}>
@@ -227,10 +252,8 @@ const DatesRowView = (props) => {
 export const ProductCard = (props) => {
     const product = props.product
 
-    const productStatus = props.product.expiry <= Date.now() / 1000 ? (props.product.orders >= props.product.pricing[0].qty ? "ORDERS CLOSED" : "DEMAND NOT MET") : true
-
     return (
-        <div className="product" key={product.title.concat(product.id)} style={product.expiry >= Date.now() / 1000 ? { opacity: 1 } : { opacity: 0.55 }}>
+        <div className="product" key={product.title.concat(product.id)} style={product.status === -1 || product.status == null ? { opacity: 1 } : { opacity: 0.55 }}>
             <div className="img-wrapper">
                 <img src={product.img} alt="" />
             </div>
@@ -240,7 +263,7 @@ export const ProductCard = (props) => {
                     <PriceView pricing={product.pricing} currentQty={product.orders} noCart={props.noCart} />
                 </div>
                 <div className="dates-row">
-                    <DatesRowView expiry={product.expiry} delivery={product.delivery} status={productStatus} />
+                    <DatesRowView expiry={product.expiry} delivery={product.delivery} status={product.status} />
                 </div>
             </div>
         </div >

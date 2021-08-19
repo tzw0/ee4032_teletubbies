@@ -33,7 +33,7 @@ export const DeadlineSchedule = (props) => {
     const stepperData = [
         {
             "icon": AssignmentTurnedInIcon,
-            "title": "Orders Completed",
+            "title": "Orders Closed",
             "deadline": epochToDate(product.expiry),
         },].concat(
             product.schedule ?
