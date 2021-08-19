@@ -1,13 +1,16 @@
 $mainColor: black;
 $background: white;
-$primaryColor: rgb(126, 161, 255);
-$primaryColorFaded: rgba(111, 0, 255, 0.5);
-$secondaryColor: rgb(111, 0, 255);
-$secondaryColorFaded: rgba(255, 129, 56, 0.55);
+$primaryColor: rgb(0, 164, 240);
+// $secondaryColor: rgb(111, 0, 255);
+$secondaryColor: rgb(118, 3, 153);
+// $secondaryColorFaded: rgba(111, 0, 255, 0.5);
+$secondaryColorFaded: rgba(118, 3, 153, 0.5);
+
+$tertiaryColor: red;
 $contentSize: 16px;
 
 //topbar
-$topBarBackgroundColor: rgb(150, 45, 182);
+$topBarBackgroundColor: $secondaryColor;
 $topBarFontColor: white;
 
 //interactivity
@@ -22,4 +25,11 @@ h1 {
     font-weight: 400;
     font-size: 50px;
     // font-family: 'Roboto Mono', sans-serif;s
+}
+
+.btn{
+    &:hover{
+        border: 1px solid $primaryColor;
+        color: $primaryColor;
+    }
 }

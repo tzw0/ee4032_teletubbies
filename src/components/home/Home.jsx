@@ -1,7 +1,9 @@
 import './home.scss'
 import AddShoppingCartIcon from '@material-ui/icons/AddShoppingCart';
+import LocalShippingIcon from '@material-ui/icons/LocalShipping';
+import { Tooltip } from '@material-ui/core';
 
-const queriedProductList = [
+export const queriedProductList = [
     {
         "id": "0",
         "title": "Keyboard x1312",
@@ -26,7 +28,24 @@ const queriedProductList = [
                 "cost": 3,
                 "qty": 300
             },
-        ]
+        ],
+        "expiry": 1629359273,
+        "delivery": 1629469273,
+        "schedule": [
+            {
+                "title": "Production Begins",
+                "deadline": 1629409273
+            },
+            {
+                "title": "Production Completed",
+                "deadline": 1629429273
+            },
+            {
+                "title": "Products Shipped",
+                "deadline": 1629429273
+            },
+        ],
+        "status": 0
     },
     {
         "id": "1",
@@ -52,7 +71,9 @@ const queriedProductList = [
                 "cost": 3,
                 "qty": 300
             },
-        ]
+        ],
+        "expiry": 1639359273,
+        "delivery": 1623569273,
     },
     {
         "id": "2",
@@ -78,7 +99,9 @@ const queriedProductList = [
                 "cost": 3,
                 "qty": 300
             },
-        ]
+        ],
+        "expiry": 1631359273,
+        "delivery": 1636769273,
     },
     {
         "id": "3",
@@ -104,7 +127,9 @@ const queriedProductList = [
                 "cost": 3,
                 "qty": 300
             },
-        ]
+        ],
+        "expiry": 1629359273,
+        "delivery": 1649869273,
     },
 ]
 
@@ -150,7 +175,12 @@ const PriceView = (props) => {
 
             return (
                 <div className="price-view">
-                    <h4 className="current-price">{props.pricing[currentPriceIndex].cost} ETH <span className="add-cart"><AddShoppingCartIcon /></span></h4>
+                    <h4 className="current-price">{props.pricing[currentPriceIndex].cost} ETH
+                        {props.noCart ?
+                            <span></span> :
+                            <span className="add-cart"><AddShoppingCartIcon /></span>
+                        }
+                    </h4>
                     <TextProgressBar text={props.currentQty + "/" + props.pricing[currentPriceIndex].qty + " orders"} progress={1} />
                 </div>
             )
@@ -159,24 +189,58 @@ const PriceView = (props) => {
 
     return (
         <div className="price-view">
-            <h4 className="current-price">{props.pricing[currentPriceIndex].cost} ETH <span className="add-cart"><AddShoppingCartIcon /></span></h4>
+            <h4 className="current-price">{props.pricing[currentPriceIndex].cost} ETH
+                {props.noCart ?
+                    <span></span> :
+                    <span className="add-cart"><AddShoppingCartIcon /></span>
+                }
+            </h4>
             <TextProgressBar text={props.currentQty + "/" + props.pricing[nextPriceIndex].qty + " orders"} progress={props.currentQty / props.pricing[nextPriceIndex].qty} />
             <h4 className="next-price">to {props.pricing[nextPriceIndex].cost} ETH</h4>
         </div>
     )
 }
 
+const DatesRowView = (props) => {
+    var expiryDate = new Date(0)
+    expiryDate.setUTCSeconds(props.expiry)
+    var expiryStr = props.s === true ? expiryDate.toLocaleString().split(',')[0] : props.status
+
+    var deliveryDate = new Date(0)
+    deliveryDate.setUTCSeconds(props.delivery)
+    var deliveryStr = deliveryDate.toLocaleString().split(',')[0]
+
+    return (
+        <div className="dates-row-view">
+            <Tooltip arrow title={expiryDate >= Date.now() ? <h5>Order Deadline</h5> : <h5>Order Deadline Reached</h5>}>
+                <div className="expiry"> {expiryStr} </div>
+            </Tooltip>
+            <Tooltip arrow title={<h5>get your order by this date</h5>}>
+                <div className="delivery">
+                    <LocalShippingIcon fontSize="inherit" />
+                    <span>{deliveryStr}</span>
+                </div></Tooltip>
+        </div >
+    )
+}
+
 export const ProductCard = (props) => {
     const product = props.product
+
+    const productStatus = props.product.expiry <= Date.now() / 1000 ? (props.product.orders >= props.product.pricing[0].qty ? "ORDERS CLOSED" : "DEMAND NOT MET") : true
+
     return (
-        <div className="product" key={product.title.concat(product.id)} >
+        <div className="product" key={product.title.concat(product.id)} style={product.expiry >= Date.now() / 1000 ? { opacity: 1 } : { opacity: 0.55 }}>
             <div className="img-wrapper">
                 <img src={product.img} alt="" />
             </div>
             <div className="text-wrapper">
                 <h3>{product.title}</h3>
                 <div className="pricing">{/* can do the css rule to only display the first item*/}
-                    <PriceView pricing={product.pricing} currentQty={product.orders} />
+                    <PriceView pricing={product.pricing} currentQty={product.orders} noCart={props.noCart} />
+                </div>
+                <div className="dates-row">
+                    <DatesRowView expiry={product.expiry} delivery={product.delivery} status={productStatus} />
                 </div>
             </div>
         </div >

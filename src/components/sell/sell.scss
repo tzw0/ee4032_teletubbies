@@ -13,19 +13,13 @@
         width: 100%;
         color: $secondaryColor;
 
-        .container{
-            // display: grid;
-            // grid-template-columns: repeat(auto-fill, 270px);
-            // justify-content: center;
-            // min-width: 100%;
-            // overflow: auto; 
-            // white-space: nowrap; 
+        .container { 
             display: flex;
             justify-content: space-between;
             overflow-x: auto;
         }
         
-        .selected-product{
+        .selected-product {
             display: flex;
             justify-content: center;
             align-items: center;
@@ -37,7 +31,7 @@
             }
         }
 
-        .field-container{
+        .field-container {
             display: flex;
             flex-direction: row;
             flex-wrap: wrap;
@@ -77,8 +71,30 @@
                 }
             }
 
-        }
+            
+            .order-status-wrapper {
+                width: 100%;
+                .order-status{
+                    width: 100%;
+                    display: flex;
+                    flex-direction: column;
+                    justify-content: center;
+                    
+                    .btn-wrapper{
+                        display: flex;
+                        justify-content: center;
 
+                        .btn{
+                            min-width: 200px;
+
+                            .refund{
+                                color: $tertiaryColor;
+                            }
+                        }
+                    }
+                }
+            }
+        }
     
         .btn {
             margin-left: 13px;
@@ -86,4 +102,26 @@
         }
     }
 
+}
+
+.deadline-schedule {
+    .text-box{
+        display: flex;
+        flex-direction: column;
+
+        .deadline{
+            font-size: 13px;
+            color: $tertiaryColor;
+            font-weight: 600;
+            padding: 2px;
+            border: $tertiaryColor solid 1px;
+            margin: 0 auto;
+            display: block;
+            margin-bottom: 5px;
+        }
+    
+        .icon {
+            color: $primaryColor;
+        }
+    }
 }

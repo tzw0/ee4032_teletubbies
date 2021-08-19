@@ -1,6 +1,8 @@
-export const PrimaryColor = 'rgb(29, 136, 185)';
-export const SecondaryColor = 'rgb(255, 129, 56)';
-export const TopbarBackgroundColor = 'rgb(26, 0, 0)';
+export const PrimaryColor = 'rgb(0, 164, 240)';
+export const SecondaryColor = 'rgb(118, 3, 153)';
+export const SecondaryColorFaded = 'rgba(118, 3, 153, 0.5)';
+export const TertiaryColor = 'red';
+export const TopbarBackgroundColor = 'rgb(118, 3, 153)';
 export const TopbarFontColor = 'white';
 export const MainColor = 'black';
 export const Background = 'white';
