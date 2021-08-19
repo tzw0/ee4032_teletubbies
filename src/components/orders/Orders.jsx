@@ -1,11 +1,23 @@
 import './orders.scss'
+import { ProductCard, queriedProductList } from '../home/Home'
+import { DeadlineSchedule } from '../sell/Sell'
 
-import React from 'react'
+const orderedProducts = queriedProductList
 
 export default function Orders() {
     return (
         <div className="orders">
-            My Orders (page include orders that u have already paid for but waiting for product, the product status of which stage of manufacturing, time bar countdown to getting product (stats), and completed orders)
+            <h1>My Orders</h1>
+            <div className="container">
+                {orderedProducts.map((product) => (
+                    <div className="order-items">
+                        <ProductCard product={product} />
+                        <div className="order-status">
+                            <DeadlineSchedule product={product} />
+                        </div>
+                    </div>
+                ))}
+            </div>
         </div>
     )
 }

@@ -74,6 +74,7 @@ export const queriedProductList = [
         ],
         "expiry": 1639359273,
         "delivery": 1623569273,
+        "status": -1
     },
     {
         "id": "2",
@@ -102,6 +103,7 @@ export const queriedProductList = [
         ],
         "expiry": 1631359273,
         "delivery": 1636769273,
+        "status": -1
     },
     {
         "id": "3",

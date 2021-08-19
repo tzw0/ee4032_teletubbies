@@ -1,5 +1,23 @@
 @import '../../global.scss';
 
 .orders{
-    
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+
+    .container{
+        display: flex;
+        flex-direction: column;
+
+        .order-items{
+            display: flex;
+            align-items: center;
+            padding: 7px;
+            border-radius: 20px;
+            border: 1px solid $secondaryColor;
+            margin: 25px auto;
+            width: 100%;
+            overflow: auto;
+        }
+    }
 }
