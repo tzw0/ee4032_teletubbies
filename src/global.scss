@@ -1,13 +1,13 @@
 $mainColor: black;
 $background: white;
-$primaryColor: rgb(34, 149, 202);
-$primaryColorFaded: rgba(34, 149, 202, 0.55);
-$secondaryColor: rgb(255, 129, 56);
+$primaryColor: rgb(126, 161, 255);
+$primaryColorFaded: rgba(111, 0, 255, 0.5);
+$secondaryColor: rgb(111, 0, 255);
 $secondaryColorFaded: rgba(255, 129, 56, 0.55);
 $contentSize: 16px;
 
 //topbar
-$topBarBackgroundColor: rgb(26, 0, 0);
+$topBarBackgroundColor: rgb(150, 45, 182);
 $topBarFontColor: white;
 
 //interactivity
@@ -17,8 +17,9 @@ $maxPageWidth: 1110px;
 $minPageWidth: 720px;
 
 h1 {
-    color: $mainColor;
+    color: $secondaryColor;
+    width: 100%;
     font-weight: 400;
-    font-size: 70px;
+    font-size: 50px;
     // font-family: 'Roboto Mono', sans-serif;s
 }

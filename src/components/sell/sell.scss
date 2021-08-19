@@ -2,6 +2,88 @@
 
 .sell{
     display: flex;
+    flex-direction: column;
     width: 100%;
-    height: 400px;
+
+    .section-wrapper {
+        margin: 20px 0;
+        padding: 10px;
+        border: solid 1px $secondaryColor;
+        border-radius: 30px;
+        width: 100%;
+        color: $secondaryColor;
+
+        .container{
+            // display: grid;
+            // grid-template-columns: repeat(auto-fill, 270px);
+            // justify-content: center;
+            // min-width: 100%;
+            // overflow: auto; 
+            // white-space: nowrap; 
+            display: flex;
+            justify-content: space-between;
+            overflow-x: auto;
+        }
+        
+        .selected-product{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 20px;
+
+            h2{
+                margin-top: 15px;
+                margin-right: 10px;
+            }
+        }
+
+        .field-container{
+            display: flex;
+            flex-direction: row;
+            flex-wrap: wrap;
+            padding: 10px;
+            font-size: $contentSize;
+            
+
+            .field{
+                font-size: inherit;
+                display: flex;
+                align-items: center;
+                margin: 5px;
+
+                input{
+                    border: none;
+                    border: 2px solid $secondaryColor;
+                    font-size: inherit;
+                    margin: 0 10px 5px 0;
+                }
+
+                h3{
+                    font-size: inherit;
+                    margin-right: 10px;
+                }
+                
+                h2{
+                    color: $mainColor;
+                }
+
+                .price-tag{
+                    color: $mainColor;
+                    margin-right: 5px;
+                    margin-bottom: 5px;
+                    padding: 7px;
+                    border-radius: 20px;
+                    border: 1px solid $mainColor;
+                }
+            }
+
+        }
+
+    
+        .btn {
+            margin-left: 13px;
+            margin-bottom: 10px;
+        }
+    }
+
 }

@@ -11,8 +11,16 @@ import StoreIcon from '@material-ui/icons/Store';
 import { makeStyles } from '@material-ui/core';
 import { Tooltip } from '@material-ui/core';
 
+const recentQueries = [
+    "Can query recent searches of user ",
+    "Or some generic categories",
+    "(if we got time)",
+    "Search result should stick upon page refresh",
+    "eg result 1",
+];
+
 export default function Topbar() {
-    const classes = useAutocompleteStyles();
+    const classes = UseAutocompleteStyles();
 
     return (
         <div className="topbar">
@@ -27,7 +35,7 @@ export default function Topbar() {
                     freeSolo
                     id="search-bar"
                     // disableClearable
-                    options={top100Films.map((option) => option)}
+                    options={recentQueries.map((option) => option)}
                     style={{ width: "100%", color: "white", display: "block", marginLeft: "auto", marginRight: "auto" }}
                     renderInput={(params) => (
                         <TextField
@@ -77,16 +85,7 @@ export default function Topbar() {
     )
 }
 
-
-const top100Films = [
-    "Can query recent searches of user ",
-    "Or some generic categories",
-    "(if we got time)",
-    "Search result should stick upon page refresh",
-    "eg result 1",
-];
-
-export const useAutocompleteStyles = makeStyles((theme) => ({
+export const UseAutocompleteStyles = makeStyles((theme) => ({
     root: {
         "& .MuiInputLabel-outlined:not(.MuiInputLabel-shrink)": {
             transform: "translate(34px, 20px) scale(1);"

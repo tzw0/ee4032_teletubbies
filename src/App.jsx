@@ -14,7 +14,7 @@ import Home from "./components/home/Home";
 import Sell from "./components/sell/Sell";
 import Orders from "./components/orders/Orders";
 import Cart from "./components/cart/Cart";
-import Account from "./components/account/Account";
+// import Account from "./components/account/Account";
 import Footer from "./components/footer/Footer";
 
 
@@ -77,12 +77,12 @@ function App() {
         <Topbar />
         <div className="pages">
           <Switch>
-            <Route path="/account" component={Account} />
+            {/* <Route path="/account" component={Account} /> */}
             <Route path="/store" component={Sell} />
             <Route path="/orders" component={Orders} />
             <Route path="/cart" component={Cart} />
-            <Route path="/test">
-              <h1>Teletubbies</h1>
+            <Route path={["/test", "/account"]}>
+              <h1>Test Read Write Smart Contract State</h1>
               <p>your account: {account}</p>
               <p>your network: {network}</p>
               <p>VarX: {varX}</p>
