@@ -223,6 +223,9 @@ const DatesRowView = (props) => {
     expiryDate.setUTCSeconds(props.expiry)
     var expiryStr
     switch (true) {
+        case props.status === -3:
+            expiryStr = "ORDER CANCELLED"
+            break
         case props.status === -2:
             expiryStr = "DEMAND NOT MET"
             break

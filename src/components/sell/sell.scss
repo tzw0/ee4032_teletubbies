@@ -81,6 +81,7 @@
                     justify-content: center;
                     
                     .btn-wrapper{
+                        margin-top: 30px;
                         display: flex;
                         justify-content: center;
 
@@ -105,6 +106,8 @@
 }
 
 .deadline-schedule {
+    display: flex;
+    flex-direction: column;
     .text-box{
         display: flex;
         flex-direction: column;
@@ -122,6 +125,16 @@
     
         .icon {
             color: $primaryColor;
+        }
+    }
+
+    
+    span{
+        color: $mainColor;
+
+        strong{
+            color: $primaryColor;
+            margin-bottom: 20px;
         }
     }
 }

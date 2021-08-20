@@ -61,8 +61,18 @@ export const DeadlineSchedule = (props) => {
         return formattedIcon
     }
 
+    const countdown = Math.floor((product.expiry - Date.now() / 1000) / (24 * 60 * 60))
+    const currentStatus = product.status < 0 ?
+        (product.status <= -2 ? "Order Cancelled" : "Ordering In Progress (" + countdown + " days left)")
+        : (product.status >= stepperData.length ? stepperData[stepperData.length - 1] : stepperData[product.status].title)
+
     return (
         <div className="deadline-schedule">
+
+            {
+                <span> &nbsp; &nbsp; &nbsp; &nbsp; Current Status: <strong>{currentStatus}</strong></span>
+            }
+
             <Stepper alternativeLabel activeStep={product.status}>
                 {stepperData.map((status) => (
                     <Step key={status}>
@@ -79,6 +89,71 @@ export const DeadlineSchedule = (props) => {
     )
 }
 
+const DeadlineScheduleControls = (props) => {
+    //somehow this state does not rerender when variable changes
+    const { status, schedule } = props.product
+    var CancelVisibile = true;
+    var NextStepVisibile = true;
+    var NextStepTitle = ""
+    var CancelTitle = "Cancel & Refund"
+    const haveCustomSchedule = !(schedule == null)
+    switch (status) {
+        case -2:
+            NextStepTitle = "Relaunch Product"
+            CancelTitle = "Delete Product";
+            break
+        case -1:
+            NextStepVisibile = false
+            CancelTitle += " existing orders"
+            break
+        case 0:
+            if (!haveCustomSchedule) {
+                NextStepTitle = "Deliveries Completed"
+                CancelVisibile = false
+                break
+            }
+        // eslint-disable-next-line
+        case 1:
+            if (!haveCustomSchedule) {
+                CancelVisibile = false
+                NextStepVisibile = false
+                break
+            }
+        // eslint-disable-next-line
+        default:
+            if (haveCustomSchedule) {
+                if (status === schedule.length - 1) {
+                    NextStepTitle = "Deliveries Completed"
+                    CancelVisibile = false
+                } else if (status >= schedule.length) {
+                    CancelVisibile = false
+                    NextStepVisibile = false
+                } else {
+                    NextStepTitle = schedule[status].title
+                }
+            }
+    }
+
+    return (
+        <div className="btn-wrapper">
+            {
+                NextStepVisibile ?
+                    <Button className="btn" color="inherit" variant="outlined" >
+                        <CheckCircleIcon /> &nbsp;
+                        {NextStepTitle}
+                    </Button> : <div></div>
+            }
+            {
+                CancelVisibile ?
+                    <Button className="btn refund" color="inherit" variant="outlined" >
+                        <CancelIcon /> &nbsp;
+                        {CancelTitle}
+                    </Button> : <div></div>
+            }
+        </div>
+    )
+}
+
 export default function Sell() {
     const [selectedProduct, setSelectedProduct] = useState(myProductList[0])
     const classes = UseAutocompleteStyles();
@@ -88,12 +163,7 @@ export default function Sell() {
 
     return (
         <div className="sell">
-            <div className="section-wrapper">
-                <h1>My Store</h1>
-                total orders ?
-                total revenue ?
-                other useful data...
-            </div>
+            <h1>My Store</h1>
             <div className="section-wrapper">
                 <h1>My Products</h1>
                 <div className="container">
@@ -149,17 +219,7 @@ export default function Sell() {
                         </div>
                         <div className="order-status">
                             <DeadlineSchedule product={selectedProduct} />
-
-                            <div className="btn-wrapper">
-                                <Button className="btn" color="inherit" variant="outlined" >
-                                    <CheckCircleIcon /> &nbsp;
-                                    {"abfsbal"}
-                                </Button>
-                                <Button className="btn refund" color="inherit" variant="outlined" >
-                                    <CancelIcon /> &nbsp;
-                                    Cancel & Refund
-                                </Button>
-                            </div>
+                            <DeadlineScheduleControls product={selectedProduct} />
                         </div>
                     </div>
                 </div>
@@ -247,7 +307,7 @@ const UseAutocompleteStyles = makeStyles((theme) => ({
         },
         // Selected has dark-grey
         '&[aria-selected="true"]': {
-            backgroundColor: Background,
+            backgroundColor: PrimaryColor,
             borderColor: 'transparent',
         },
     },

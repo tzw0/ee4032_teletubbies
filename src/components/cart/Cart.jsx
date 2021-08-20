@@ -2,6 +2,8 @@ import './cart.scss'
 import { ProductCard, queriedProductList } from '../home/Home'
 import { Button } from '@material-ui/core'
 import Checkbox from '@material-ui/core/Checkbox';
+import RemoveCircleOutlineIcon from '@material-ui/icons/RemoveCircleOutline';
+import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline';
 
 const cartProducts = queriedProductList
 
@@ -12,21 +14,27 @@ export default function Cart() {
             <div className="container">
                 {cartProducts.map((product) => (
                     <div className="cart-items">
+                        <Checkbox color="inherit" size="large"
+                            checked={true}
+                        // onChange={handleChange}
+                        // inputProps={{ 'aria-label': 'primary checkbox' }}
+                        />
                         <ProductCard product={product} />
                         <div className="controls">
-                            <Button className="btn" color="inherit" variant="outlined" >-</Button>
-                            <h3> 2</h3>
-                            <Button className="btn" color="inherit" variant="outlined" >+</Button>
-                            <Checkbox color="inherit" size="large"
-                            // checked={checked}
-                            // onChange={handleChange}
-                            // inputProps={{ 'aria-label': 'primary checkbox' }}
-                            />
+                            <h3>
+                                <span> <RemoveCircleOutlineIcon fontSize="inherit" /> </span>
+                                2
+                                <span> <AddCircleOutlineIcon fontSize="inherit" /></span>
+                            </h3>
+
                         </div>
                     </div>
                 ))}
             </div>
-            <Button className="btn" color="inherit" variant="outlined" >Checkout</Button>
+            <div className="btn-wrapper">
+                <Button className="btn" color="inherit" variant="outlined" >Save Cart</Button>
+                <Button className="btn" color="inherit" variant="outlined" >Checkout</Button>
+            </div>
         </div>
     )
 }
