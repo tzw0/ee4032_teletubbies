@@ -11,6 +11,7 @@ import StoreIcon from '@material-ui/icons/Store';
 import { makeStyles } from '@material-ui/core';
 import { Tooltip } from '@material-ui/core';
 import { ReactComponent as Shoppeth } from './SHOPPETH.svg';
+import HomeIcon from '@material-ui/icons/Home';
 
 const recentQueries = [
     "Can query recent searches of user ",
@@ -62,6 +63,11 @@ export default function Topbar() {
                 </div>
             </div>
             <div className="right">
+                <Link to="/">
+                    <Tooltip title={<h5 style={{ fontSize: TopbarIconSize }}> Home</h5>}>
+                        < HomeIcon fontSize="inherit" />
+                    </Tooltip>
+                </Link>
                 <Link to="/store">
                     <Tooltip title={<h5 style={{ fontSize: TopbarIconSize }}> My Store</h5>}>
                         < StoreIcon fontSize="inherit" />

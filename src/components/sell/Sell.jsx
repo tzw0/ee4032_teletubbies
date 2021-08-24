@@ -34,7 +34,7 @@ export const DeadlineSchedule = (props) => {
         {
             "icon": ShoppingCartIcon,
             "title": "Orders Open",
-            "deadline": "Product Launched"
+            "deadline": "Launched"
         },
         {
             "icon": AssignmentTurnedInIcon,
@@ -173,7 +173,7 @@ export default function Sell() {
         <div className="sell">
             <h1>My Store</h1>
             <div className="section-wrapper">
-                <h1>My Products</h1>
+                <h2>My Products</h2>
                 <div className="container">
                     {myProductList.map((product, index) => (
                         <div onClick={() => onProductClick(index)}>
@@ -182,10 +182,8 @@ export default function Sell() {
                     ))}
                 </div>
                 <br />
-                <h1>Product Status</h1>
-                <span>* select product by clicking it in My Products section *</span>
                 <div className="selected-product">
-                    <h2>Product: </h2>
+                    <h2>Product Status of: </h2>
                     <Autocomplete
                         classes={classes}
                         freeSolo
@@ -194,7 +192,7 @@ export default function Sell() {
                         onChange={(event) => { setSelectedProduct(myProductList[event.target.dataset.optionIndex]); console.log(event) }}
                         // disableClearable
                         options={myProductList.map((product) => product.product_name)}
-                        style={{ width: "100%", color: "white", display: "block", marginLeft: "auto", marginRight: "auto" }}
+                        style={{ width: "400px", color: "white" }}
                         renderInput={(params) => (
                             <TextField
                                 {...params}
@@ -207,6 +205,8 @@ export default function Sell() {
                         )}
                     />
                 </div>
+                <span>* select product by clicking it in My Products section *</span>
+
                 <div className="field-container">
                     <div className="field">
                         <h3>Current Orders:</h3> <h2>{selectedProduct.current_orders}<LocalMallIcon fontSize="inherit" /></h2>
@@ -234,8 +234,8 @@ export default function Sell() {
             </div>
 
             <div className="section-wrapper">
+                <h2>Add Progress Stage to <strong>{selectedProduct.product_name}</strong></h2>
                 <div className="field-container">
-                    <h3>Add Progress Stage to <strong>{selectedProduct.product_name}</strong>:</h3>
                     <form action="" onSubmit="">
                         <div className="field">
                             <h3>Stage Name:</h3>
@@ -253,9 +253,9 @@ export default function Sell() {
 
 
             <div className="section-wrapper">
-                <h1>Add New Product
+                <h2>Add New Product
                     {/* <AddCircleOutlineIcon fontSize="inherit" /> */}
-                </h1>
+                </h2>
                 <form action="" onSubmit="">
                     <div className="field-container">
 

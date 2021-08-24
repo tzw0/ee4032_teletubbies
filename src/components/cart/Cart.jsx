@@ -15,7 +15,6 @@ export default function Cart() {
                 {cartProducts.map((product) => (
                     <div className="cart-items">
                         <Checkbox color="inherit" size="large"
-                            checked={true}
                         // onChange={handleChange}
                         // inputProps={{ 'aria-label': 'primary checkbox' }}
                         />
