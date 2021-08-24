@@ -1,12 +1,14 @@
 $mainColor: black;
 $background: white;
-$primaryColor: rgb(0, 164, 240);
+$primaryColor: #FF7850;
+$primaryColorFaded: rgba(254,121,78, 0.5);
+// $primaryColor: rgb(0, 164, 240);
 // $secondaryColor: rgb(111, 0, 255);
 $secondaryColor: rgb(118, 3, 153);
 // $secondaryColorFaded: rgba(111, 0, 255, 0.5);
 $secondaryColorFaded: rgba(118, 3, 153, 0.5);
 
-$tertiaryColor: red;
+$tertiaryColor: $primaryColor;
 $contentSize: 16px;
 
 //topbar

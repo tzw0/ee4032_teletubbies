@@ -2,7 +2,6 @@ import './sell.scss'
 import { ProductCard } from '../home/Home'
 import { Button } from '@material-ui/core'
 import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline';
-import AddShoppingCartIcon from '@material-ui/icons/AddShoppingCart';
 import LocalMallIcon from '@material-ui/icons/LocalMall';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import TextField from '@material-ui/core/TextField';
@@ -19,6 +18,7 @@ import RadioButtonUncheckedIcon from '@material-ui/icons/RadioButtonUnchecked';
 import CheckCircleOutlineIcon from '@material-ui/icons/CheckCircleOutline';
 import CancelIcon from '@material-ui/icons/Cancel';
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
+import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
 
 const myProductList = queriedProductList
 
@@ -32,26 +32,31 @@ export const DeadlineSchedule = (props) => {
     }
     const stepperData = [
         {
+            "icon": ShoppingCartIcon,
+            "title": "Orders Open",
+            "deadline": "Product Launched"
+        },
+        {
             "icon": AssignmentTurnedInIcon,
             "title": "Orders Closed",
-            "deadline": epochToDate(product.expiry),
+            "deadline": epochToDate(product.order_close_date),
         },].concat(
-            product.schedule ?
-                product.schedule.map((status) => ({
+            product.progress ?
+                product.progress.map((status) => ({
                     "icon": null,
                     "title": status.title,
-                    "deadline": epochToDate(status.deadline)
+                    "deadline": status.timestamp == null ? "-/-/-" : epochToDate(status.timestamp)
                 })) : [],
             {
                 "icon": LocalShippingIcon,
                 "title": "Deliveries Completed",
-                "deadline": epochToDate(product.delivery),
+                "deadline": epochToDate(product.promised_deadline),
             })
 
     const getFormattedIcon = (OriginalIcon) => {
         const formattedIcon = (props) => {
             return (
-                <div className="icon" style={props.completed || props.active ? { opacity: 1, color: PrimaryColor } : { opacity: 0.5, color: SecondaryColor }}>
+                <div className="icon" style={props.completed || props.active ? { opacity: 1, color: PrimaryColor } : { opacity: 0.4, color: SecondaryColor }}>
                     {OriginalIcon === null ? (
                         props.completed || props.active ? <CheckCircleOutlineIcon /> : <RadioButtonUncheckedIcon />
                     ) : <OriginalIcon />}
@@ -61,19 +66,17 @@ export const DeadlineSchedule = (props) => {
         return formattedIcon
     }
 
-    const countdown = Math.floor((product.expiry - Date.now() / 1000) / (24 * 60 * 60))
-    const currentStatus = product.status < 0 ?
-        (product.status <= -2 ? "Order Cancelled" : "Ordering In Progress (" + countdown + " days left)")
-        : (product.status >= stepperData.length ? stepperData[stepperData.length - 1] : stepperData[product.status].title)
+    // const countdown = Math.floor((product.expiry - Date.now() / 1000) / (24 * 60 * 60))
+    const currentStatus = stepperData[product.current_progress].title
 
     return (
         <div className="deadline-schedule">
 
             {
-                <span> &nbsp; &nbsp; &nbsp; &nbsp; Current Status: <strong>{currentStatus}</strong></span>
+                <span> &nbsp; &nbsp; &nbsp; &nbsp; Current Status: <strong>{product.current_status === "ORDERS_CANCELLED" ? "PRODUCT CANCELLED" : currentStatus}</strong></span>
             }
 
-            <Stepper alternativeLabel activeStep={product.status}>
+            <Stepper alternativeLabel activeStep={product.current_progress}>
                 {stepperData.map((status) => (
                     <Step key={status}>
                         <StepLabel StepIconComponent={getFormattedIcon(status.icon)}>
@@ -91,29 +94,24 @@ export const DeadlineSchedule = (props) => {
 
 const DeadlineScheduleControls = (props) => {
     //somehow this state does not rerender when variable changes
-    const { status, schedule } = props.product
+    const { current_progress, progress, current_status } = props.product
     var CancelVisibile = true;
     var NextStepVisibile = true;
     var NextStepTitle = ""
     var CancelTitle = "Cancel & Refund"
-    const haveCustomSchedule = !(schedule == null)
-    switch (status) {
-        case -2:
-            NextStepTitle = "Relaunch Product"
-            CancelTitle = "Delete Product";
-            break
-        case -1:
+    const haveCustomSchedule = !(progress == null)
+    switch (current_progress) {
+        case 0:
             NextStepVisibile = false
             CancelTitle += " existing orders"
             break
-        case 0:
+        case 1:
             if (!haveCustomSchedule) {
                 NextStepTitle = "Deliveries Completed"
-                CancelVisibile = false
                 break
             }
         // eslint-disable-next-line
-        case 1:
+        case 2:
             if (!haveCustomSchedule) {
                 CancelVisibile = false
                 NextStepVisibile = false
@@ -122,16 +120,26 @@ const DeadlineScheduleControls = (props) => {
         // eslint-disable-next-line
         default:
             if (haveCustomSchedule) {
-                if (status === schedule.length - 1) {
+                if (current_progress === progress.length + 1) {
                     NextStepTitle = "Deliveries Completed"
                     CancelVisibile = false
-                } else if (status >= schedule.length) {
+                } else if (current_progress >= progress.length + 1) {
                     CancelVisibile = false
                     NextStepVisibile = false
                 } else {
-                    NextStepTitle = schedule[status].title
+                    NextStepTitle = progress[current_progress - 1].title
                 }
+            } else {
+                CancelVisibile = false
+                NextStepVisibile = false
+                break
             }
+    }
+
+    if (current_status === "ORDERS_CANCELLED") {
+        NextStepVisibile = true
+        CancelVisibile = false
+        NextStepTitle = "Relaunch Product"
     }
 
     return (
@@ -182,10 +190,10 @@ export default function Sell() {
                         classes={classes}
                         freeSolo
                         id="search-bar"
-                        value={selectedProduct.title}
+                        value={selectedProduct.product_name}
                         onChange={(event) => { setSelectedProduct(myProductList[event.target.dataset.optionIndex]); console.log(event) }}
                         // disableClearable
-                        options={myProductList.map((product) => product.title)}
+                        options={myProductList.map((product) => product.product_name)}
                         style={{ width: "100%", color: "white", display: "block", marginLeft: "auto", marginRight: "auto" }}
                         renderInput={(params) => (
                             <TextField
@@ -201,21 +209,21 @@ export default function Sell() {
                 </div>
                 <div className="field-container">
                     <div className="field">
-                        <h3>Added to cart:</h3> <h2>{selectedProduct.cart}<AddShoppingCartIcon fontSize="inherit" /></h2>
+                        <h3>Current Orders:</h3> <h2>{selectedProduct.current_orders}<LocalMallIcon fontSize="inherit" /></h2>
                     </div>
                     <div className="field">
-                        <h3>Orders:</h3> <h2>{selectedProduct.orders}<LocalMallIcon fontSize="inherit" /></h2>
+                        <h3>Min Orders:</h3><h4>{selectedProduct.min_orders}<LocalMallIcon fontSize="inherit" /></h4>
                     </div>
                     <div className="field">
-                        <h3>Pricings:</h3>
-                        {selectedProduct.pricing.map((price) => (
-                            <div className="price-tag">{price.qty} for {price.cost} ETH</div>
-                        ))}
+                        <h3>Max Orders:</h3> <h4>{selectedProduct.max_orders}<LocalMallIcon fontSize="inherit" /></h4>
                     </div>
-
+                    <div className="field">
+                        <h3>Cost:</h3>
+                        <h4>{selectedProduct.cost} ETH</h4>
+                    </div>
                     <div className="order-status-wrapper">
                         <div className="field">
-                            <h3>Product Deadline Schedule:</h3>
+                            <h3>Product Timeline:</h3>
                         </div>
                         <div className="order-status">
                             <DeadlineSchedule product={selectedProduct} />

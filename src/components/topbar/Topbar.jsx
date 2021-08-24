@@ -3,13 +3,14 @@ import { Link } from 'react-router-dom'
 import { PrimaryColor, TopbarBackgroundColor, TopbarFontColor, TopbarIconSize } from '../../global'
 import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
 import LocalMallIcon from '@material-ui/icons/LocalMall';
-import AccountCircleIcon from '@material-ui/icons/AccountCircle';
+// import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import SearchIcon from '@material-ui/icons/Search';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import TextField from '@material-ui/core/TextField';
 import StoreIcon from '@material-ui/icons/Store';
 import { makeStyles } from '@material-ui/core';
 import { Tooltip } from '@material-ui/core';
+import { ReactComponent as Shoppeth } from './SHOPPETH.svg';
 
 const recentQueries = [
     "Can query recent searches of user ",
@@ -26,7 +27,8 @@ export default function Topbar() {
         <div className="topbar">
             <div className="left">
                 <Link to="/">
-                    Teletubbies
+                    <img src="assets/logo.png" alt="" />
+                    <Shoppeth width={200} color="inherit" />
                 </Link >
             </div>
             <div className="center">
@@ -75,11 +77,11 @@ export default function Topbar() {
                         <LocalMallIcon fontSize="inherit" />
                     </Tooltip>
                 </Link>
-                <Link to="/account">
+                {/* <Link to="/account">
                     <Tooltip title={<h5 style={{ fontSize: TopbarIconSize }}> My Account</h5>}>
                         <AccountCircleIcon fontSize="inherit" />
                     </Tooltip>
-                </Link>
+                </Link> */}
             </div>
         </div>
     )
