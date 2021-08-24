@@ -1,7 +1,7 @@
 import './sell.scss'
 import { ProductCard } from '../home/Home'
 import { Button } from '@material-ui/core'
-import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline';
+// import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline';
 import LocalMallIcon from '@material-ui/icons/LocalMall';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import TextField from '@material-ui/core/TextField';
@@ -234,7 +234,28 @@ export default function Sell() {
             </div>
 
             <div className="section-wrapper">
-                <h1>Add New Product <AddCircleOutlineIcon fontSize="inherit" /></h1>
+                <div className="field-container">
+                    <h3>Add Progress Stage to <strong>{selectedProduct.product_name}</strong>:</h3>
+                    <form action="" onSubmit="">
+                        <div className="field">
+                            <h3>Stage Name:</h3>
+                            <input className="input-field" name="progress_state" required input="text" placeholder="Production Completed" />
+                        </div>
+                        <div className="field">
+                            <h3>Estimated Completion Time:</h3>
+                            <input className="input-field" name="estimated_timestamp" input="text" placeholder="1629366318" />
+                        </div>
+                        <Button className="btn" color="inherit" variant="outlined" >Add +</Button>
+                    </form>
+                </div>
+            </div>
+
+
+
+            <div className="section-wrapper">
+                <h1>Add New Product
+                    {/* <AddCircleOutlineIcon fontSize="inherit" /> */}
+                </h1>
                 <form action="" onSubmit="">
                     <div className="field-container">
 
@@ -262,10 +283,6 @@ export default function Sell() {
                         <div className="field">
                             <h3>Delivery Deadline:</h3>
                             <input className="input-field" name="delivery" placeholder="1639366318" required input="text" />
-                        </div>
-                        <div className="field">
-                            <h3>Product Deadline Schedule:</h3>
-                            <input className="input-field" name="delivery" placeholder="stage1(1629366318), stage2(1629466318), shipped(1639066318)" required input="text" style={{ width: 500 }} />
                         </div>
                     </div>
                     <Button className="btn" color="inherit" variant="outlined" >Add +</Button>
