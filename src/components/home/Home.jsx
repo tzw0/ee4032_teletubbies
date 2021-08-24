@@ -179,6 +179,8 @@ export const ProductCard = (props) => {
 export default function Home() {
     return (
         <div className="home">
+            <h1>Home</h1>
+            <span>*currently displaying all results*</span>
             <div className="container">
                 {queriedProductList.map((product) => (
                     <ProductCard product={product} />

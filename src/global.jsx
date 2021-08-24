@@ -8,3 +8,4 @@ export const TopbarFontColor = 'white';
 export const MainColor = 'black';
 export const Background = 'white';
 export const TopbarIconSize = 16;
+export const GlobalDomainPrefix = "/shoppeth"

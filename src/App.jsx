@@ -11,8 +11,8 @@ import Sell from "./components/sell/Sell";
 import Orders from "./components/orders/Orders";
 import Cart from "./components/cart/Cart";
 import Footer from "./components/footer/Footer";
-import Test from './components/test/Test';
-// import Account from "./components/account/Account";
+// import Test from './components/test/Test';
+import Login from "./components/login/Login";
 
 
 function App() {
@@ -22,19 +22,19 @@ function App() {
       <Router>
         <Topbar />
         <div className="pages">
+          <Login />
           <Switch>
-            {/* <Route path="/account" component={Account} /> */}
             <Route path="/store" component={Sell} />
             <Route path="/orders" component={Orders} />
             <Route path="/cart" component={Cart} />
-            <Route path={["/test", "/account"]} component={Test}>
-            </Route>
+            {/* <Route path={"/test"} component={Test}> */}
+            {/* </Route> */}
             <Route path="/" component={Home} />
           </Switch>
         </div>
       </Router>
       <Footer />
-    </div>
+    </div >
   );
 }
 

@@ -12,6 +12,15 @@ export default function Test() {
     const web3 = new Web3(Web3.givenProvider || "http://localhost:8545")
     const smartContract = new web3.eth.Contract(SMART_CONTRACT_ABI, SMART_CONTRACT_ADDRESS)
 
+    const ethEnabled = async () => {
+        if (window.ethereum) {
+            await window.ethereum.send('eth_requestAccounts');
+            window.web3 = new Web3(window.ethereum);
+            return true;
+        }
+        return false;
+    }
+
     smartContract.events.MyEvent({
         fromBlock: "latest"
     })
@@ -61,6 +70,7 @@ export default function Test() {
 
     return (
         <div className="test">
+            <Button color="primary" variant="contained" onClick={() => ethEnabled()}>Login</Button>
             {account == null ? "you are not signed in" : "Welcome " + account}
             <p>your account: {account}</p>
             <p>your network: {network}</p>

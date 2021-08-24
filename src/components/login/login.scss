@@ -1,0 +1,33 @@
+@import "../../global.scss";
+
+.login{
+    .container{
+        padding: 15px;
+        border-radius: 20px;
+        border: solid 1px $primaryColor;
+
+        h2{
+            font-weight: 300;
+            font-size: 25px;
+            color: $primaryColor;
+
+            span{
+                font-size: 20px;
+                color: $mainColor;
+            }
+        }
+
+        p{
+            font-size: 20px;
+            color: $primaryColor;
+
+            span{
+                color: $mainColor;
+            }
+        }
+    
+    }
+    .margin {
+        margin-bottom: 20px;
+    }
+}
