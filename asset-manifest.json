@@ -1,24 +1,24 @@
 {
   "files": {
-    "main.css": "/shoppeth/static/css/main.b7e9da36.chunk.css",
-    "main.js": "/shoppeth/static/js/main.a6df5091.chunk.js",
-    "main.js.map": "/shoppeth/static/js/main.a6df5091.chunk.js.map",
+    "main.css": "/shoppeth/static/css/main.fa45179a.chunk.css",
+    "main.js": "/shoppeth/static/js/main.7527e217.chunk.js",
+    "main.js.map": "/shoppeth/static/js/main.7527e217.chunk.js.map",
     "runtime-main.js": "/shoppeth/static/js/runtime-main.4b225ee2.js",
     "runtime-main.js.map": "/shoppeth/static/js/runtime-main.4b225ee2.js.map",
     "static/css/2.32c1ecfd.chunk.css": "/shoppeth/static/css/2.32c1ecfd.chunk.css",
-    "static/js/2.9182557e.chunk.js": "/shoppeth/static/js/2.9182557e.chunk.js",
-    "static/js/2.9182557e.chunk.js.map": "/shoppeth/static/js/2.9182557e.chunk.js.map",
+    "static/js/2.26d5c413.chunk.js": "/shoppeth/static/js/2.26d5c413.chunk.js",
+    "static/js/2.26d5c413.chunk.js.map": "/shoppeth/static/js/2.26d5c413.chunk.js.map",
     "index.html": "/shoppeth/index.html",
     "static/css/2.32c1ecfd.chunk.css.map": "/shoppeth/static/css/2.32c1ecfd.chunk.css.map",
-    "static/css/main.b7e9da36.chunk.css.map": "/shoppeth/static/css/main.b7e9da36.chunk.css.map",
-    "static/js/2.9182557e.chunk.js.LICENSE.txt": "/shoppeth/static/js/2.9182557e.chunk.js.LICENSE.txt",
+    "static/css/main.fa45179a.chunk.css.map": "/shoppeth/static/css/main.fa45179a.chunk.css.map",
+    "static/js/2.26d5c413.chunk.js.LICENSE.txt": "/shoppeth/static/js/2.26d5c413.chunk.js.LICENSE.txt",
     "static/media/SHOPPETH.892d715d.svg": "/shoppeth/static/media/SHOPPETH.892d715d.svg"
   },
   "entrypoints": [
     "static/js/runtime-main.4b225ee2.js",
     "static/css/2.32c1ecfd.chunk.css",
-    "static/js/2.9182557e.chunk.js",
-    "static/css/main.b7e9da36.chunk.css",
-    "static/js/main.a6df5091.chunk.js"
+    "static/js/2.26d5c413.chunk.js",
+    "static/css/main.fa45179a.chunk.css",
+    "static/js/main.7527e217.chunk.js"
   ]
 }
