@@ -3,6 +3,9 @@ import AddShoppingCartIcon from '@material-ui/icons/AddShoppingCart';
 import LocalShippingIcon from '@material-ui/icons/LocalShipping';
 import { Tooltip } from '@material-ui/core';
 import { web3 } from '../../contract';
+import { useHistory } from 'react-router-dom';
+import { GlobalDomainPrefix } from '../../global';
+import InfoIcon from '@material-ui/icons/Info';
 
 export const queriedProductList = [
     {
@@ -136,11 +139,11 @@ const PriceView = (props) => {
 const DatesRowView = (props) => {
     var expiryDate = new Date(0)
     expiryDate.setUTCSeconds(props.expiry)
-    const expiryStr = props.production_status === "ORDERS_OPEN" ? expiryDate.toLocaleString().split(',')[0] : props.production_status.split("_")[1]
+    const expiryStr = props.production_status === "ORDERS_OPEN" ? expiryDate.toLocaleString('en-GB').split(',')[0] : props.production_status.split("_")[1]
 
     var deliveryDate = new Date(0)
     deliveryDate.setUTCSeconds(props.delivery)
-    var deliveryStr = deliveryDate.toLocaleString().split(',')[0]
+    var deliveryStr = deliveryDate.toLocaleString('en-GB').split(',')[0]
 
     return (
         <div className="dates-row-view">
@@ -158,16 +161,23 @@ const DatesRowView = (props) => {
 
 export const ProductCard = (props) => {
     const product = props.product
+    let history = useHistory();
+
+    const onProductClick = () => {
+        if (props.active) {
+            props.addToCart(product); history.push(GlobalDomainPrefix + '/cart');
+        }
+    }
 
     return (
-        <div className="product" key={product.product_name.concat(product.product_address)} style={product.production_status === "ORDERS_OPEN" ? { opacity: 1 } : { opacity: 0.55 }}>
-            <div className="img-wrapper">
+        <div className={props.active ? "product active" : "product"} key={product.product_name.concat(product.product_address)} style={product.production_status === "ORDERS_OPEN" ? { opacity: 1 } : { opacity: 0.55 }}>
+            <div className="img-wrapper" onClick={() => onProductClick()}>
                 <img src={product.img} alt="" />
             </div>
             <div className="text-wrapper">
                 <h3>{product.product_name}</h3>
                 <div className="pricing">{/* can do the css rule to only display the first item*/}
-                    <PriceView noCart={props.noCart} product={product} addToCart={props.addToCart} />
+                    <PriceView noCart={!props.active} product={product} addToCart={props.addToCart} />
                 </div>
                 <div className="dates-row">
                     <DatesRowView expiry={product.order_close_date} delivery={product.promised_deadline} production_status={product.production_status} />
@@ -179,12 +189,16 @@ export const ProductCard = (props) => {
 
 
 export default function Home(props) {
-
-    console.log(props.products)
     return (
         <div className="home">
             <h1>Home</h1>
-            <span>*currently displaying results for '{props.keyword}'*</span>
+            <span>*currently searching for '{props.keyword}'*</span>
+            <div className="info">
+                <InfoIcon />
+                <div> Click on '<AddShoppingCartIcon />'
+                    icon to add to cart. Click on Product Image to add to cart and go to cart.
+                </div>
+            </div>
 
             {props.products == null ?
                 <div className="no-result">
@@ -196,7 +210,7 @@ export default function Home(props) {
                     </div> :
                     <div className="container">
                         {props.products.map((product) => (
-                            <ProductCard product={product} addToCart={props.addToCart} />
+                            <ProductCard active={product.production_status === "ORDERS_OPEN"} product={product} addToCart={props.addToCart} />
                         ))}
                     </div>
                 )

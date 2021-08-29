@@ -2,7 +2,7 @@ import { SHOPPETH_ABI, SHOPPETH_ADDRESS, PRODUCT_ABI, EVENT_EMITTER_ADDRESS, EVE
 import Web3 from 'web3'
 
 export const web3 = new Web3(Web3.givenProvider || "http://localhost:8545")
-export const shoppethContract = new web3.eth.Contract(SHOPPETH_ABI, SHOPPETH_ADDRESS)
+export const shoppethContract = new web3.eth.Contract(SHOPPETH_ABI, SHOPPETH_ADDRESS)//, { gasLimit: 10000000 })
 export const eventEmitterContract = new web3.eth.Contract(EVENT_EMITTER_ABI, EVENT_EMITTER_ADDRESS)
 
 export const CreateProduct = async (
@@ -25,7 +25,7 @@ export const CreateProduct = async (
     map["x" + product_name.toLowerCase()] = true
     map["x" + accounts[0].toLowerCase()] = true
     for (let i = 0; i < keywordList.length; i++) {
-        if (map["x" + keywordList[i].toLowerCase()] == null) {
+        if (map["x" + keywordList[i].toLowerCase()] == null && keywordList[i].length <= 40) {
             map["x" + keywordList[i].toLowerCase()] = true
             filteredKeywordList.push(keywordList[i].toLowerCase())
         }

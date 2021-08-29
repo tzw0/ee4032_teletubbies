@@ -1,5 +1,30 @@
 @import "../../global.scss";
 
 .footer {
+    background: $secondaryColor;
+    padding: 20px 0;
+    width: 100%;
 
+    h2{
+        color: $background;
+        font-weight: 300;
+    }
+
+    .container{
+        color: $background;
+
+        display: flex;
+        flex-wrap: wrap;
+        width: 100%;
+    
+        .info{
+            color: $background;
+            display: flex;
+            margin-top: 10px;
+            div{
+                display:block;
+            }
+    
+        }
+    }
 }

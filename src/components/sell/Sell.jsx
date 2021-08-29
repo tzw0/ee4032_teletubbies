@@ -21,6 +21,8 @@ import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
 import { CancelNRefund, CreateProduct, SellerCloseOrders, SetProgressDone, AddProgress } from '../../contract';
 import CancelPresentationIcon from '@material-ui/icons/CancelPresentation';
 import { web3 } from '../../contract';
+import LocalAtmIcon from '@material-ui/icons/LocalAtm';
+import InfoIcon from '@material-ui/icons/Info';
 
 export const DeadlineSchedule = (props) => {
     const product = props.product
@@ -28,9 +30,10 @@ export const DeadlineSchedule = (props) => {
         var date = new Date(0)
         date.setUTCSeconds(epoch)
 
-        return date.toLocaleString().split(',')[0]
+        return date.toLocaleString('en-GB').split(',')[0]
     }
-    const stepperData = [
+
+    const stepperDataFixed = [
         {
             "icon": ShoppingCartIcon,
             "title": "Orders Open",
@@ -46,12 +49,23 @@ export const DeadlineSchedule = (props) => {
                     "icon": null,
                     "title": status.title,
                     "deadline": status.timestamp == null || status.timestamp === 0 ? "-/-/-" : epochToDate(status.timestamp)
-                })) : [],
-            {
-                "icon": LocalShippingIcon,
-                "title": "Deliveries Completed",
-                "deadline": epochToDate(product.promised_deadline),
-            })
+                })) : [])
+
+    const stepperDataRefunded = stepperDataFixed.concat(
+        {
+            "icon": LocalAtmIcon,
+            "title": "Refunded",
+            "deadline": epochToDate(product.promised_deadline),
+        })
+
+    const stepperDataDelivered = stepperDataFixed.concat(
+        {
+            "icon": LocalShippingIcon,
+            "title": "Deliveries Completed",
+            "deadline": epochToDate(product.promised_deadline),
+        })
+
+    const stepperData = product.user_item_data[1] < 0 ? stepperDataRefunded : stepperDataDelivered
 
     const getFormattedIcon = (OriginalIcon) => {
         const formattedIcon = (props) => {
@@ -66,15 +80,14 @@ export const DeadlineSchedule = (props) => {
         return formattedIcon
     }
 
-    // const countdown = Math.floor((product.expiry - Date.now() / 1000) / (24 * 60 * 60))
-    const currentStatus = stepperData[product.current_progress].title
+    const currentStatus = product.production_status === "ORDERS_CANCELLED" ? "PRODUCT CANCELLED" : stepperData[product.current_progress].title
     const activeStep = parseInt(product.current_progress)
 
     return (
         <div className="deadline-schedule">
 
             {
-                <span> &nbsp; &nbsp; &nbsp; &nbsp; Current Status: <strong>{product.production_status === "ORDERS_CANCELLED" ? "PRODUCT CANCELLED" : currentStatus}</strong></span>
+                <span> &nbsp; &nbsp; &nbsp; &nbsp; Current Status: <strong>{currentStatus}</strong></span>
             }
 
             <Stepper alternativeLabel activeStep={activeStep}>
@@ -214,7 +227,7 @@ export default function Sell(props) {
 
     return (
         <div className="sell">
-            <h1>My Store</h1>
+            <h1>My Shop</h1>
             <div className="section-wrapper">
                 <h2>My Products</h2>
                 {
@@ -228,7 +241,7 @@ export default function Sell(props) {
                             <div className="container">
                                 {props.products.map((product, index) => (
                                     <div onClick={() => onProductClick(index)}>
-                                        <ProductCard product={product} noCart />
+                                        <ProductCard product={product} />
                                     </div>
                                 ))}
                             </div>
@@ -365,6 +378,9 @@ export default function Sell(props) {
                                 onInput={e => setDaysToPromisedDeadline(e.target.value)} />
                         </div>
                     </div>
+                    <span><InfoIcon /> The order and delivery deadlines are corrected to the start of the day</span>
+                    <br />
+                    <br />
                     <Button className="btn" color="inherit" variant="outlined" type="submit">Add +</Button>
                 </form>
             </div>

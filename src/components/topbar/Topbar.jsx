@@ -1,6 +1,6 @@
 import './topbar.scss'
 import { Link } from 'react-router-dom'
-import { PrimaryColor, TopbarBackgroundColor, TopbarFontColor, TopbarIconSize } from '../../global'
+import { GlobalDomainPrefix, PrimaryColor, TopbarBackgroundColor, TopbarFontColor, TopbarIconSize } from '../../global'
 import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
 import LocalMallIcon from '@material-ui/icons/LocalMall';
 // import AccountCircleIcon from '@material-ui/icons/AccountCircle';
@@ -13,8 +13,10 @@ import { makeStyles } from '@material-ui/core';
 import { Tooltip } from '@material-ui/core';
 import { ReactComponent as Shoppeth } from './SHOPPETH.svg';
 import HomeIcon from '@material-ui/icons/Home';
+import { useHistory } from 'react-router-dom';
 
 export default function Topbar(props) {
+    let history = useHistory();
     const [recentSearches, setRecentSearches] = useState(["all"])
     const [recentSearchesSet, setRecentSearchesSet] = useState({ "all": true })
     const addSearch = (search) => {
@@ -27,12 +29,13 @@ export default function Topbar(props) {
         }
     }
 
-    const submitSearch = (search) => {
-        if (search == null || search === "") {
+    const submitSearch = (value) => {
+        if (value == null || value === "") {
             return
         }
-        props.onKeywordChange(search);
-        addSearch(search);
+        props.onKeywordChange(value);
+        addSearch(value);
+        history.push(GlobalDomainPrefix);
     }
 
     const classes = UseAutocompleteStyles();
@@ -40,7 +43,7 @@ export default function Topbar(props) {
     return (
         <div className="topbar">
             <div className="left">
-                <Link to="/">
+                <Link to={GlobalDomainPrefix + "/"}>
                     <img src="assets/logo.png" alt="" />
                     <Shoppeth width={200} color="inherit" />
                 </Link >
@@ -51,7 +54,7 @@ export default function Topbar(props) {
                     freeSolo
                     id="search-bar"
                     // disableClearable
-                    onChange={(event, value) => submitSearch(value)}
+                    onChange={(event, value) => { submitSearch(value) }}
                     options={recentSearches.map((option) => option)}
                     style={{ width: "100%", color: "white", display: "block", marginLeft: "auto", marginRight: "auto" }}
                     renderInput={(params) => (
@@ -72,29 +75,29 @@ export default function Topbar(props) {
                         />
                     )}
                 />
-                <div className="search-btn">
-                    <Link to="/">
+                <div className="search-btn" >
+                    <Link to={GlobalDomainPrefix + "/"}>
                         <SearchIcon fontSize="inherit" />
                     </Link>
                 </div>
             </div>
             <div className="right">
-                <Link to="/">
+                <Link to={GlobalDomainPrefix + "/"}>
                     <Tooltip title={<h5 style={{ fontSize: TopbarIconSize }}> Home</h5>}>
                         < HomeIcon fontSize="inherit" />
                     </Tooltip>
                 </Link>
-                <Link to="/store">
-                    <Tooltip title={<h5 style={{ fontSize: TopbarIconSize }}> My Store</h5>}>
+                <Link to={GlobalDomainPrefix + "/myshop"}>
+                    <Tooltip title={<h5 style={{ fontSize: TopbarIconSize }}> My Shop</h5>}>
                         < StoreIcon fontSize="inherit" />
                     </Tooltip>
                 </Link>
-                <Link to="/cart">
+                <Link to={GlobalDomainPrefix + "/cart"}>
                     <Tooltip title={<h5 style={{ fontSize: TopbarIconSize }}>Shopping Cart</h5>}>
                         <ShoppingCartIcon fontSize="inherit" />
                     </Tooltip>
                 </Link>
-                <Link to="/orders">
+                <Link to={GlobalDomainPrefix + "/orders"}>
                     <Tooltip title={<h5 style={{ fontSize: TopbarIconSize }}> My Orders</h5>}>
                         <LocalMallIcon fontSize="inherit" />
                     </Tooltip>

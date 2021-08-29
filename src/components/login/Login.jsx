@@ -44,7 +44,7 @@ export default function Login() {
                     <h2> <ErrorOutlineIcon /> Please login with metamask </h2> :
                     <h2><VerifiedUserIcon /> Logged in with address: <span> {account}</span> </h2>}
                 <p><WifiTetheringIcon /> Network: <span>{network}</span></p>
-                <h2><InfoIcon /> <span>View each contract interaction status on the Metamask plugin.</span> </h2>
+                <h2><InfoIcon /> <strong>Contract interactions require some time to take effect. You can view the status on the Metamask plugin.</strong> </h2>
 
                 {account == null ?
                     <Button className="btn" color="inherit" variant="outlined" >Login with MetaMask</Button>
