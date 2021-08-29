@@ -5,6 +5,7 @@ import { Button } from '@material-ui/core'
 import VerifiedUserIcon from '@material-ui/icons/VerifiedUser';
 import WifiTetheringIcon from '@material-ui/icons/WifiTethering';
 import ErrorOutlineIcon from '@material-ui/icons/ErrorOutline';
+import InfoIcon from '@material-ui/icons/Info';
 
 export default function Login() {
     const web3 = new Web3(Web3.givenProvider || "http://localhost:8545")
@@ -43,6 +44,7 @@ export default function Login() {
                     <h2> <ErrorOutlineIcon /> Please login with metamask </h2> :
                     <h2><VerifiedUserIcon /> Logged in with address: <span> {account}</span> </h2>}
                 <p><WifiTetheringIcon /> Network: <span>{network}</span></p>
+                <h2><InfoIcon /> <span>View each contract interaction status on the Metamask plugin.</span> </h2>
 
                 {account == null ?
                     <Button className="btn" color="inherit" variant="outlined" >Login with MetaMask</Button>

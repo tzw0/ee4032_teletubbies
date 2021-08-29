@@ -2,6 +2,7 @@ import './home.scss'
 import AddShoppingCartIcon from '@material-ui/icons/AddShoppingCart';
 import LocalShippingIcon from '@material-ui/icons/LocalShipping';
 import { Tooltip } from '@material-ui/core';
+import { web3 } from '../../contract';
 
 export const queriedProductList = [
     {
@@ -14,7 +15,7 @@ export const queriedProductList = [
         "max_orders": 20,
         "cost": 10,
         "order_close_date": 1629359273,
-        "promised_deadline": 1629469273,
+        "promised_deadline_date": 1629469273,
         "progress": [
             {
                 "title": "Production Begins",
@@ -30,7 +31,7 @@ export const queriedProductList = [
             },
         ],
         "current_progress": 0,
-        "current_status": "ORDERS_CANCELLED"
+        "production_status": "ORDERS_CANCELLED"
     },
     {
         "address": "1",
@@ -42,9 +43,9 @@ export const queriedProductList = [
         "cost": 8,
         "max_orders": 40,
         "order_close_date": 1639359273,
-        "promised_deadline": 1623569273,
+        "promised_deadline_date": 1623569273,
         "current_progress": 0,
-        "current_status": "ORDERS_OPEN"
+        "production_status": "ORDERS_OPEN"
     },
     {
         "address": "2",
@@ -56,9 +57,9 @@ export const queriedProductList = [
         "cost": 5,
         "max_orders": 500,
         "order_close_date": 1631359273,
-        "promised_deadline": 1636769273,
+        "promised_deadline_date": 1636769273,
         "current_progress": 0,
-        "current_status": "ORDERS_OPEN"
+        "production_status": "ORDERS_OPEN"
     },
     {
         "address": "3",
@@ -70,7 +71,7 @@ export const queriedProductList = [
         "cost": 3,
         "max_orders": 2000,
         "order_close_date": 1629359273,
-        "promised_deadline": 1649869273,
+        "promised_deadline_date": 1649869273,
         "current_progress": 3,
         "progress": [
             {
@@ -86,7 +87,7 @@ export const queriedProductList = [
                 "timestamp": 1629429273
             },
         ],
-        "current_status": "ORDERS_CLOSED"
+        "production_status": "ORDERS_CLOSED"
     },
 ]
 
@@ -101,30 +102,31 @@ const TextProgressBar = (props) => {
 }
 
 const PriceView = (props) => {
-    const ordersMore = props.min - props.current
-    const ordersLeft = props.max - props.current
+    const product = props.product
+    const ordersMore = product.min_orders - product.current_orders
+    const ordersLeft = product.max_orders - product.current_orders
     const display = ordersLeft === 0 ? "" : (ordersMore <= 0 ? ordersLeft + " Left!" : "Needs " + ordersMore + " More!")
-    const progress = props.current >= props.min ?
-        (props.max === 0 ? 0 : props.current / props.max) :
-        (props.min === 0 ? 0 : props.current / props.min)
+    const progress = product.current_orders >= product.min_orders ?
+        (product.max_orders === 0 ? 0 : product.current_orders / product.max_orders) :
+        (product.min_orders === 0 ? 0 : product.current_orders / product.min_orders)
 
-    const tooltip = ordersLeft === 0 ? "Product Sold Out" : (props.current >= props.min ?
+    const tooltip = ordersLeft === 0 ? "Product Sold Out" : (product.current_orders >= product.min_orders ?
         ordersLeft + " items left! Order Now!" :
         "Product needs " + ordersMore + " more orders to be confirmed")
 
-    const text = props.current + "/" + (props.current >= props.min ? props.max : props.min) + " ordered"
+    const text = product.current_orders + "/" + (product.current_orders >= product.min_orders ? product.max_orders : product.min_orders) + " ordered"
 
 
     return (
         <Tooltip arrow placement="top" title={<h5>{tooltip}</h5>}>
             <div className="price-view">
-                <h4 className="current-price">{props.cost} ETH
+                <h4 className="current-price">{web3.utils.fromWei(String(product.cost), 'ether')} ETH
                     {props.noCart ?
                         <span></span> :
-                        <span className="add-cart"><AddShoppingCartIcon /></span>
+                        <span className="add-cart" onClick={() => props.addToCart(product)}><AddShoppingCartIcon /></span>
                     }
                 </h4>
-                <TextProgressBar text={text} progress={progress} color={props.current >= props.min ? "" : "primary"} />
+                <TextProgressBar text={text} progress={progress} color={product.current_orders >= product.min_orders ? "" : "primary"} />
                 <h4 className="next-price">{display}</h4>
             </div>
         </Tooltip>
@@ -134,7 +136,7 @@ const PriceView = (props) => {
 const DatesRowView = (props) => {
     var expiryDate = new Date(0)
     expiryDate.setUTCSeconds(props.expiry)
-    const expiryStr = props.current_status === "ORDERS_OPEN" ? expiryDate.toLocaleString().split(',')[0] : props.current_status.split("_")[1]
+    const expiryStr = props.production_status === "ORDERS_OPEN" ? expiryDate.toLocaleString().split(',')[0] : props.production_status.split("_")[1]
 
     var deliveryDate = new Date(0)
     deliveryDate.setUTCSeconds(props.delivery)
@@ -142,7 +144,7 @@ const DatesRowView = (props) => {
 
     return (
         <div className="dates-row-view">
-            <Tooltip arrow title={props.current_status === "ORDERS_OPEN" ? <h5>ORDER DEADLINE</h5> : <h5>{"ORDER " + expiryStr}</h5>}>
+            <Tooltip arrow title={props.production_status === "ORDERS_OPEN" ? <h5>ORDER DEADLINE</h5> : <h5>{"ORDER " + expiryStr}</h5>}>
                 <div className="expiry"> {expiryStr} </div>
             </Tooltip>
             <Tooltip arrow title={<h5>Get your order by this date</h5>}>
@@ -158,17 +160,17 @@ export const ProductCard = (props) => {
     const product = props.product
 
     return (
-        <div className="product" key={product.product_name.concat(product.address)} style={product.current_status === "ORDERS_OPEN" ? { opacity: 1 } : { opacity: 0.55 }}>
+        <div className="product" key={product.product_name.concat(product.product_address)} style={product.production_status === "ORDERS_OPEN" ? { opacity: 1 } : { opacity: 0.55 }}>
             <div className="img-wrapper">
                 <img src={product.img} alt="" />
             </div>
             <div className="text-wrapper">
                 <h3>{product.product_name}</h3>
                 <div className="pricing">{/* can do the css rule to only display the first item*/}
-                    <PriceView cost={product.cost} current={product.current_orders} noCart={props.noCart} max={product.max_orders} min={product.min_orders} />
+                    <PriceView noCart={props.noCart} product={product} addToCart={props.addToCart} />
                 </div>
                 <div className="dates-row">
-                    <DatesRowView expiry={product.order_close_date} delivery={product.promised_deadline} current_status={product.current_status} />
+                    <DatesRowView expiry={product.order_close_date} delivery={product.promised_deadline} production_status={product.production_status} />
                 </div>
             </div>
         </div >
@@ -176,16 +178,29 @@ export const ProductCard = (props) => {
 }
 
 
-export default function Home() {
+export default function Home(props) {
+
+    console.log(props.products)
     return (
         <div className="home">
             <h1>Home</h1>
-            <span>*currently displaying all results*</span>
-            <div className="container">
-                {queriedProductList.map((product) => (
-                    <ProductCard product={product} />
-                ))}
-            </div>
+            <span>*currently displaying results for '{props.keyword}'*</span>
+
+            {props.products == null ?
+                <div className="no-result">
+                    <h2>Loading ...</h2>
+                </div> :
+                (props.products.length === 0 ?
+                    <div className="no-result">
+                        <h2>No Products Found ...</h2>
+                    </div> :
+                    <div className="container">
+                        {props.products.map((product) => (
+                            <ProductCard product={product} addToCart={props.addToCart} />
+                        ))}
+                    </div>
+                )
+            }
         </div>
     )
 }

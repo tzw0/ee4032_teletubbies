@@ -8,7 +8,6 @@ import TextField from '@material-ui/core/TextField';
 import { MainColor, Background, SecondaryColorFaded, SecondaryColor, PrimaryColor } from '../../global'
 import { useState } from 'react';
 import { makeStyles } from '@material-ui/core';
-import { queriedProductList } from '../home/Home';
 import Stepper from '@material-ui/core/Stepper';
 import Step from '@material-ui/core/Step';
 import StepLabel from '@material-ui/core/StepLabel';
@@ -19,8 +18,9 @@ import CheckCircleOutlineIcon from '@material-ui/icons/CheckCircleOutline';
 import CancelIcon from '@material-ui/icons/Cancel';
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
-
-const myProductList = queriedProductList
+import { CancelNRefund, CreateProduct, SellerCloseOrders, SetProgressDone, AddProgress } from '../../contract';
+import CancelPresentationIcon from '@material-ui/icons/CancelPresentation';
+import { web3 } from '../../contract';
 
 export const DeadlineSchedule = (props) => {
     const product = props.product
@@ -45,7 +45,7 @@ export const DeadlineSchedule = (props) => {
                 product.progress.map((status) => ({
                     "icon": null,
                     "title": status.title,
-                    "deadline": status.timestamp == null ? "-/-/-" : epochToDate(status.timestamp)
+                    "deadline": status.timestamp == null || status.timestamp === 0 ? "-/-/-" : epochToDate(status.timestamp)
                 })) : [],
             {
                 "icon": LocalShippingIcon,
@@ -56,7 +56,7 @@ export const DeadlineSchedule = (props) => {
     const getFormattedIcon = (OriginalIcon) => {
         const formattedIcon = (props) => {
             return (
-                <div className="icon" style={props.completed || props.active ? { opacity: 1, color: PrimaryColor } : { opacity: 0.4, color: SecondaryColor }}>
+                <div className="icon" style={props.completed || props.active ? { opacity: 1, color: PrimaryColor } : { opacity: 0.3, color: SecondaryColor }}>
                     {OriginalIcon === null ? (
                         props.completed || props.active ? <CheckCircleOutlineIcon /> : <RadioButtonUncheckedIcon />
                     ) : <OriginalIcon />}
@@ -68,16 +68,17 @@ export const DeadlineSchedule = (props) => {
 
     // const countdown = Math.floor((product.expiry - Date.now() / 1000) / (24 * 60 * 60))
     const currentStatus = stepperData[product.current_progress].title
+    const activeStep = parseInt(product.current_progress)
 
     return (
         <div className="deadline-schedule">
 
             {
-                <span> &nbsp; &nbsp; &nbsp; &nbsp; Current Status: <strong>{product.current_status === "ORDERS_CANCELLED" ? "PRODUCT CANCELLED" : currentStatus}</strong></span>
+                <span> &nbsp; &nbsp; &nbsp; &nbsp; Current Status: <strong>{product.production_status === "ORDERS_CANCELLED" ? "PRODUCT CANCELLED" : currentStatus}</strong></span>
             }
 
-            <Stepper alternativeLabel activeStep={product.current_progress}>
-                {stepperData.map((status) => (
+            <Stepper alternativeLabel activeStep={activeStep}>
+                {stepperData.map((status, index) => (
                     <Step key={status}>
                         <StepLabel StepIconComponent={getFormattedIcon(status.icon)}>
                             <div className="text-box">
@@ -94,20 +95,26 @@ export const DeadlineSchedule = (props) => {
 
 const DeadlineScheduleControls = (props) => {
     //somehow this state does not rerender when variable changes
-    const { current_progress, progress, current_status } = props.product
+    const { current_progress, progress, production_status } = props.product
     var CancelVisibile = true;
     var NextStepVisibile = true;
+    var CloseOrders = false;
     var NextStepTitle = ""
     var CancelTitle = "Cancel & Refund"
-    const haveCustomSchedule = !(progress == null)
-    switch (current_progress) {
+    const haveCustomSchedule = !(progress == null || progress.length === 0)
+    switch (parseInt(current_progress)) {
         case 0:
             NextStepVisibile = false
+            if (Date.now() / 1000 >= props.product.order_close_date &&
+                props.product.current_orders >= props.product.min_orders) {
+                CloseOrders = true
+            }
             CancelTitle += " existing orders"
             break
         case 1:
             if (!haveCustomSchedule) {
-                NextStepTitle = "Deliveries Completed"
+                // NextStepTitle = "Deliveries Completed"
+                NextStepVisibile = false
                 break
             }
         // eslint-disable-next-line
@@ -121,9 +128,10 @@ const DeadlineScheduleControls = (props) => {
         default:
             if (haveCustomSchedule) {
                 if (current_progress === progress.length + 1) {
-                    NextStepTitle = "Deliveries Completed"
-                    CancelVisibile = false
-                } else if (current_progress >= progress.length + 1) {
+                    // NextStepTitle = "Deliveries Completed"
+                    // CancelVisibile = false
+                    NextStepVisibile = false
+                } else if (current_progress > progress.length + 1) {
                     CancelVisibile = false
                     NextStepVisibile = false
                 } else {
@@ -136,24 +144,32 @@ const DeadlineScheduleControls = (props) => {
             }
     }
 
-    if (current_status === "ORDERS_CANCELLED") {
-        NextStepVisibile = true
+    if (production_status === "ORDERS_CANCELLED") {
+        NextStepVisibile = false
+        CloseOrders = false
         CancelVisibile = false
-        NextStepTitle = "Relaunch Product"
+        // NextStepTitle = "Relaunch Product"
     }
 
     return (
         <div className="btn-wrapper">
             {
+                CloseOrders ?
+                    <Button className="btn" color="inherit" variant="outlined" onClick={() => SellerCloseOrders(props.product.product_address)} >
+                        <CancelPresentationIcon /> &nbsp;
+                        Close Orders
+                    </Button> : <div></div>
+            }
+            {
                 NextStepVisibile ?
-                    <Button className="btn" color="inherit" variant="outlined" >
+                    <Button className="btn" color="inherit" variant="outlined" onClick={() => SetProgressDone(props.product.product_address)}>
                         <CheckCircleIcon /> &nbsp;
                         {NextStepTitle}
                     </Button> : <div></div>
             }
             {
                 CancelVisibile ?
-                    <Button className="btn refund" color="inherit" variant="outlined" >
+                    <Button onClick={() => CancelNRefund(props.product.product_address)} className="btn refund" color="inherit" variant="outlined" >
                         <CancelIcon /> &nbsp;
                         {CancelTitle}
                     </Button> : <div></div>
@@ -162,11 +178,38 @@ const DeadlineScheduleControls = (props) => {
     )
 }
 
-export default function Sell() {
-    const [selectedProduct, setSelectedProduct] = useState(myProductList[0])
+export default function Sell(props) {
+    const [selectedProductIndex, setSelectedProductIndex] = useState(0)
+    const selectedProduct = props.products == null || props.products.length === 0 ? null : props.products[selectedProductIndex]
+
+    const [daysToOrderClose, setDaysToOrderClose] = useState(0)
+    const [daysToPromisedDeadline, setDaysToPromisedDeadline] = useState(0)
+    const [keywords, setKeywords] = useState("")
+    const [img, setImg] = useState("")
+    const [productTitle, setProductTitle] = useState("")
+    const [minOrder, setMinOrder] = useState(0)
+    const [maxOrder, setMaxOrder] = useState(0)
+    const [stageTitle, setStageTitle] = useState("")
+    const [stageTimestamp, setStageTimestamp] = useState(0)
+    const [cost, setCost] = useState(0)
     const classes = UseAutocompleteStyles();
     const onProductClick = (productListIndex) => {
-        setSelectedProduct(myProductList[productListIndex])
+        setSelectedProductIndex(productListIndex)
+    }
+
+    const callCreateProduct = (e) => {
+        e.preventDefault();
+        CreateProduct(
+            productTitle,
+            img,
+            keywords,
+            minOrder,
+            maxOrder,
+            cost,
+            daysToOrderClose,
+            daysToPromisedDeadline
+        )
+        e.target.reset();
     }
 
     return (
@@ -174,81 +217,98 @@ export default function Sell() {
             <h1>My Store</h1>
             <div className="section-wrapper">
                 <h2>My Products</h2>
-                <div className="container">
-                    {myProductList.map((product, index) => (
-                        <div onClick={() => onProductClick(index)}>
-                            <ProductCard product={product} noCart />
-                        </div>
-                    ))}
-                </div>
-                <br />
-                <div className="selected-product">
-                    <h2>Product Status of: </h2>
-                    <Autocomplete
-                        classes={classes}
-                        freeSolo
-                        id="search-bar"
-                        value={selectedProduct.product_name}
-                        onChange={(event) => { setSelectedProduct(myProductList[event.target.dataset.optionIndex]); console.log(event) }}
-                        // disableClearable
-                        options={myProductList.map((product) => product.product_name)}
-                        style={{ width: "400px", color: "white" }}
-                        renderInput={(params) => (
-                            <TextField
-                                {...params}
-                                margin="normal"
-                                variant="outlined"
-                                InputProps={{
-                                    ...params.InputProps,
-                                }}
-                            />
+                {
+                    props.products == null ? <div className="no-result">
+                        <h2>Loading ...</h2>
+                    </div> :
+                        (props.products.length === 0 ?
+                            <div className="no-result">
+                                <h2>No Products Found ...</h2>
+                            </div> :
+                            <div className="container">
+                                {props.products.map((product, index) => (
+                                    <div onClick={() => onProductClick(index)}>
+                                        <ProductCard product={product} noCart />
+                                    </div>
+                                ))}
+                            </div>
                         )}
-                    />
-                </div>
-                <span>* select product by clicking it in My Products section *</span>
+                <br />
 
-                <div className="field-container">
-                    <div className="field">
-                        <h3>Current Orders:</h3> <h2>{selectedProduct.current_orders}<LocalMallIcon fontSize="inherit" /></h2>
-                    </div>
-                    <div className="field">
-                        <h3>Min Orders:</h3><h4>{selectedProduct.min_orders}<LocalMallIcon fontSize="inherit" /></h4>
-                    </div>
-                    <div className="field">
-                        <h3>Max Orders:</h3> <h4>{selectedProduct.max_orders}<LocalMallIcon fontSize="inherit" /></h4>
-                    </div>
-                    <div className="field">
-                        <h3>Cost:</h3>
-                        <h4>{selectedProduct.cost} ETH</h4>
-                    </div>
-                    <div className="order-status-wrapper">
-                        <div className="field">
-                            <h3>Product Timeline:</h3>
+                {selectedProduct == null ? <div></div> :
+                    <div>
+                        <div className="selected-product">
+                            <h2>Product Status of: </h2>
+                            <Autocomplete
+                                classes={classes}
+                                freeSolo
+                                id="search-bar"
+                                value={selectedProduct.product_name}
+                                onChange={(event) => { setSelectedProductIndex(event.target.dataset.optionIndex); }}
+                                // disableClearable
+                                options={props.products.map((product) => product.product_name)}
+                                style={{ width: "400px", color: "white" }}
+                                renderInput={(params) => (
+                                    <TextField
+                                        {...params}
+                                        margin="normal"
+                                        variant="outlined"
+                                        InputProps={{
+                                            ...params.InputProps,
+                                        }}
+                                    />
+                                )}
+                            />
                         </div>
-                        <div className="order-status">
-                            <DeadlineSchedule product={selectedProduct} />
-                            <DeadlineScheduleControls product={selectedProduct} />
+                        <span>* select product by clicking it in My Products section *</span>
+
+                        <div className="field-container">
+                            <div className="field">
+                                <h3>Current Orders:</h3> <h2>{selectedProduct.current_orders}<LocalMallIcon fontSize="inherit" /></h2>
+                            </div>
+                            <div className="field">
+                                <h3>Min Orders:</h3><h4>{selectedProduct.min_orders}<LocalMallIcon fontSize="inherit" /></h4>
+                            </div>
+                            <div className="field">
+                                <h3>Max Orders:</h3> <h4>{selectedProduct.max_orders}<LocalMallIcon fontSize="inherit" /></h4>
+                            </div>
+                            <div className="field">
+                                <h3>Cost:</h3>
+                                <h4>{web3.utils.fromWei(String(selectedProduct.cost), 'ether')} ETH</h4>
+                            </div>
+                            <div className="order-status-wrapper">
+                                <div className="field">
+                                    <h3>Product Timeline:</h3>
+                                </div>
+                                <div className="order-status">
+                                    <DeadlineSchedule product={selectedProduct} />
+                                    <DeadlineScheduleControls product={selectedProduct} />
+                                </div>
+                            </div>
                         </div>
                     </div>
-                </div>
+                }
             </div>
 
-            <div className="section-wrapper">
-                <h2>Add Progress Stage to <strong>{selectedProduct.product_name}</strong></h2>
-                <div className="field-container">
-                    <form action="" onSubmit="">
-                        <div className="field">
-                            <h3>Stage Name:</h3>
-                            <input className="input-field" name="progress_state" required input="text" placeholder="Production Completed" />
-                        </div>
-                        <div className="field">
-                            <h3>Estimated Completion Time:</h3>
-                            <input className="input-field" name="estimated_timestamp" input="text" placeholder="1629366318" />
-                        </div>
-                        <Button className="btn" color="inherit" variant="outlined" >Add +</Button>
-                    </form>
-                </div>
-            </div>
+            {selectedProduct == null || selectedProduct.production_status === "ORDERS_CANCELLED" ||
+                selectedProduct.production_status === "ORDERS_ENDED" ? <div></div> :
+                <div className="section-wrapper">
+                    <h2>Add Progress Stage to <strong>{selectedProduct.product_name}</strong></h2>
+                    <div className="field-container">
+                        <form action="" onSubmit="">
+                            <div className="field">
+                                <h3>Stage Name:</h3>
+                                <input className="input-field" name="progress_state" required input="text" placeholder="Production Completed" onInput={e => setStageTitle(e.target.value)} />
+                            </div>
+                            <div className="field">
+                                <h3>Estimated Completion Time:</h3>
+                                <input className="input-field" name="estimated_timestamp" input="text" placeholder="i.e. 1629366318" onInput={e => setStageTimestamp(e.target.value)} />
+                            </div>
+                            <Button className="btn" color="inherit" variant="outlined" type="submit"
+                                onClick={() => AddProgress(selectedProduct.product_address, stageTitle, stageTimestamp)}>Add +</Button>
+                        </form>
+                    </div>
+                </div>}
 
 
 
@@ -256,36 +316,56 @@ export default function Sell() {
                 <h2>Add New Product
                     {/* <AddCircleOutlineIcon fontSize="inherit" /> */}
                 </h2>
-                <form action="" onSubmit="">
+                <form action="" onSubmit={callCreateProduct}>
                     <div className="field-container">
 
                         <div className="field">
                             <h3>Product Title:</h3>
-                            <input className="input-field" name="title" required input="text" placeholder="i.e. keyboard" />
+                            <input className="input-field" name="title" required input="text" placeholder="i.e. keyboard"
+                                onInput={e => setProductTitle(e.target.value)} />
                         </div>
                         <div className="field">
                             <h3>Img Src:</h3>
-                            <input className="input-field" name="img" required input="text" placeholder="i.e. my.stuff/keyboard.jpg" />
+                            <input className="input-field" name="img" required input="text" placeholder="i.e. my.stuff/keyboard.jpg"
+                                onInput={e => setImg(e.target.value)} />
                         </div>
                         <div className="field">
-                            <h3>Group Deals:</h3>
-                            <input className="input-field" name="pricing" placeholder="i.e. 100for10, 1000for5" required input="text" />
+                            <h3>Cost</h3>
+                            <input className="input-field" name="cost" placeholder="i.e. 1" required input="text"
+                                onInput={e => setCost(e.target.value)}
+                            />
+                        </div>
+
+                        <div className="field">
+                            <h3>Minimum Orders</h3>
+                            <input className="input-field" name="min-orders" placeholder="i.e. 30" required input="text"
+                                onInput={e => setMinOrder(e.target.value)} />
+                        </div>
+
+                        <div className="field">
+                            <h3>Maximum Orders</h3>
+                            <input className="input-field" name="max-orders" placeholder="i.e. 100" required input="text"
+                                onInput={e => setMaxOrder(e.target.value)} />
                         </div>
                         <div className="field">
-                            <h3>Search KeyWords:</h3>
-                            <input className="input-field" name="keywords" placeholder="i.e. rgb, mechanical keyboard, typewriter, ..." required input="text" />
+                            <h3>Search Keywords:</h3>
+                            <input className="input-field" name="keywords" placeholder="i.e. rgb, mechanical keyboard, typewriter, ..." required input="text"
+                                onInput={e => setKeywords(e.target.value)} />
                         </div>
 
                         <div className="field">
                             <h3>Order Deadline:</h3>
-                            <input className="input-field" name="expiry" placeholder="1629366318" required input="text" />
+                            <input className="input-field" name="expiry" placeholder="i.e. 1629366318" required input="text"
+                                onInput={e => setDaysToOrderClose(e.target.value)}
+                            />
                         </div>
                         <div className="field">
                             <h3>Delivery Deadline:</h3>
-                            <input className="input-field" name="delivery" placeholder="1639366318" required input="text" />
+                            <input className="input-field" name="delivery" placeholder="i.e. 1639366318" required input="text"
+                                onInput={e => setDaysToPromisedDeadline(e.target.value)} />
                         </div>
                     </div>
-                    <Button className="btn" color="inherit" variant="outlined" >Add +</Button>
+                    <Button className="btn" color="inherit" variant="outlined" type="submit">Add +</Button>
                 </form>
             </div>
 

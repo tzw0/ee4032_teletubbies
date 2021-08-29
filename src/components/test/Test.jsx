@@ -1,7 +1,7 @@
 import React from 'react'
 import Web3 from 'web3'
 import { useEffect, useState } from 'react';
-import { SMART_CONTRACT_ABI, SMART_CONTRACT_ADDRESS } from '../../config'
+import { SHOPPETH_ABI, SHOPPETH_ADDRESS } from '../../config'
 import { Button } from '@material-ui/core';
 
 export default function Test() {
@@ -10,7 +10,7 @@ export default function Test() {
     const [status, setStatus] = useState('pending..')
     const [varX, setVarX] = useState('loading..')
     const web3 = new Web3(Web3.givenProvider || "http://localhost:8545")
-    const smartContract = new web3.eth.Contract(SMART_CONTRACT_ABI, SMART_CONTRACT_ADDRESS)
+    const smartContract = new web3.eth.Contract(SHOPPETH_ABI, SHOPPETH_ADDRESS)
 
     const ethEnabled = async () => {
         if (window.ethereum) {

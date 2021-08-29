@@ -8,20 +8,33 @@ import SearchIcon from '@material-ui/icons/Search';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import TextField from '@material-ui/core/TextField';
 import StoreIcon from '@material-ui/icons/Store';
+import { useState } from 'react';
 import { makeStyles } from '@material-ui/core';
 import { Tooltip } from '@material-ui/core';
 import { ReactComponent as Shoppeth } from './SHOPPETH.svg';
 import HomeIcon from '@material-ui/icons/Home';
 
-const recentQueries = [
-    "Can query recent searches of user ",
-    "Or some generic categories",
-    "(if we got time)",
-    "Search result should stick upon page refresh",
-    "eg result 1",
-];
+export default function Topbar(props) {
+    const [recentSearches, setRecentSearches] = useState(["all"])
+    const [recentSearchesSet, setRecentSearchesSet] = useState({ "all": true })
+    const addSearch = (search) => {
+        if (!recentSearchesSet[search]) {
+            setRecentSearches(oldSearches => [...oldSearches, search])
+            setRecentSearchesSet((prevState => ({
+                ...prevState,
+                [search]: true
+            })))
+        }
+    }
 
-export default function Topbar() {
+    const submitSearch = (search) => {
+        if (search == null || search === "") {
+            return
+        }
+        props.onKeywordChange(search);
+        addSearch(search);
+    }
+
     const classes = UseAutocompleteStyles();
 
     return (
@@ -38,14 +51,15 @@ export default function Topbar() {
                     freeSolo
                     id="search-bar"
                     // disableClearable
-                    options={recentQueries.map((option) => option)}
+                    onChange={(event, value) => submitSearch(value)}
+                    options={recentSearches.map((option) => option)}
                     style={{ width: "100%", color: "white", display: "block", marginLeft: "auto", marginRight: "auto" }}
                     renderInput={(params) => (
                         <TextField
                             {...params}
                             margin="normal"
                             variant="outlined"
-                            placeholder="Search"
+                            placeholder={"Searching for... '" + props.keyword + "'"}
                             InputProps={{
                                 ...params.InputProps,
 
@@ -59,7 +73,9 @@ export default function Topbar() {
                     )}
                 />
                 <div className="search-btn">
-                    <SearchIcon fontSize="inherit" />
+                    <Link to="/">
+                        <SearchIcon fontSize="inherit" />
+                    </Link>
                 </div>
             </div>
             <div className="right">
