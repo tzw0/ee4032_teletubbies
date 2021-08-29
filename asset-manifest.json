@@ -1,23 +1,23 @@
 {
   "files": {
-    "main.css": "/static/css/main.3361e9b5.chunk.css",
-    "main.js": "/static/js/main.831a0234.chunk.js",
-    "main.js.map": "/static/js/main.831a0234.chunk.js.map",
-    "runtime-main.js": "/static/js/runtime-main.72d6c783.js",
-    "runtime-main.js.map": "/static/js/runtime-main.72d6c783.js.map",
-    "static/css/2.32c1ecfd.chunk.css": "/static/css/2.32c1ecfd.chunk.css",
-    "static/js/2.4f30ac4d.chunk.js": "/static/js/2.4f30ac4d.chunk.js",
-    "static/js/2.4f30ac4d.chunk.js.map": "/static/js/2.4f30ac4d.chunk.js.map",
-    "index.html": "/index.html",
-    "static/css/2.32c1ecfd.chunk.css.map": "/static/css/2.32c1ecfd.chunk.css.map",
-    "static/css/main.3361e9b5.chunk.css.map": "/static/css/main.3361e9b5.chunk.css.map",
-    "static/js/2.4f30ac4d.chunk.js.LICENSE.txt": "/static/js/2.4f30ac4d.chunk.js.LICENSE.txt",
-    "static/media/SHOPPETH.892d715d.svg": "/static/media/SHOPPETH.892d715d.svg"
+    "main.css": "/tzw0.github.io/shoppeth/static/css/main.3361e9b5.chunk.css",
+    "main.js": "/tzw0.github.io/shoppeth/static/js/main.831a0234.chunk.js",
+    "main.js.map": "/tzw0.github.io/shoppeth/static/js/main.831a0234.chunk.js.map",
+    "runtime-main.js": "/tzw0.github.io/shoppeth/static/js/runtime-main.f71de37e.js",
+    "runtime-main.js.map": "/tzw0.github.io/shoppeth/static/js/runtime-main.f71de37e.js.map",
+    "static/css/2.32c1ecfd.chunk.css": "/tzw0.github.io/shoppeth/static/css/2.32c1ecfd.chunk.css",
+    "static/js/2.d60bea74.chunk.js": "/tzw0.github.io/shoppeth/static/js/2.d60bea74.chunk.js",
+    "static/js/2.d60bea74.chunk.js.map": "/tzw0.github.io/shoppeth/static/js/2.d60bea74.chunk.js.map",
+    "index.html": "/tzw0.github.io/shoppeth/index.html",
+    "static/css/2.32c1ecfd.chunk.css.map": "/tzw0.github.io/shoppeth/static/css/2.32c1ecfd.chunk.css.map",
+    "static/css/main.3361e9b5.chunk.css.map": "/tzw0.github.io/shoppeth/static/css/main.3361e9b5.chunk.css.map",
+    "static/js/2.d60bea74.chunk.js.LICENSE.txt": "/tzw0.github.io/shoppeth/static/js/2.d60bea74.chunk.js.LICENSE.txt",
+    "static/media/SHOPPETH.892d715d.svg": "/tzw0.github.io/shoppeth/static/media/SHOPPETH.892d715d.svg"
   },
   "entrypoints": [
-    "static/js/runtime-main.72d6c783.js",
+    "static/js/runtime-main.f71de37e.js",
     "static/css/2.32c1ecfd.chunk.css",
-    "static/js/2.4f30ac4d.chunk.js",
+    "static/js/2.d60bea74.chunk.js",
     "static/css/main.3361e9b5.chunk.css",
     "static/js/main.831a0234.chunk.js"
   ]
