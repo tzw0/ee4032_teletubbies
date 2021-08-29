@@ -308,18 +308,16 @@ export default function Sell(props) {
                 <div className="section-wrapper">
                     <h2>Add Progress Stage to <strong>{selectedProduct.product_name}</strong></h2>
                     <div className="field-container">
-                        <form action="" onSubmit="">
-                            <div className="field">
-                                <h3>Stage Name:</h3>
-                                <input className="input-field" name="progress_state" required input="text" placeholder="Production Completed" onInput={e => setStageTitle(e.target.value)} />
-                            </div>
-                            <div className="field">
-                                <h3>Estimated Completion Time:</h3>
-                                <input className="input-field" name="estimated_timestamp" input="text" placeholder="i.e. 1629366318" onInput={e => setStageTimestamp(e.target.value)} />
-                            </div>
-                            <Button className="btn" color="inherit" variant="outlined" type="submit"
-                                onClick={() => AddProgress(selectedProduct.product_address, stageTitle, stageTimestamp)}>Add +</Button>
-                        </form>
+                        <div className="field">
+                            <h3>Stage Name:</h3>
+                            <input className="input-field" name="progress_state" required input="text" placeholder="Production Completed" onInput={e => setStageTitle(e.target.value)} />
+                        </div>
+                        <div className="field">
+                            <h3>Estimated Completion Time:</h3>
+                            <input className="input-field" name="estimated_timestamp" input="text" placeholder="i.e. 1629366318" onInput={e => setStageTimestamp(e.target.value)} />
+                        </div>
+                        <Button className="btn" color="inherit" variant="outlined" type="submit"
+                            onClick={() => AddProgress(selectedProduct.product_address, stageTitle, stageTimestamp)}>Add +</Button>
                     </div>
                 </div>}
 
