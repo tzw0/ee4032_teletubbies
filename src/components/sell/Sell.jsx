@@ -115,8 +115,8 @@ const DeadlineScheduleControls = (props) => {
     var NextStepTitle = ""
     var CancelTitle = "Cancel & Refund"
     const haveCustomSchedule = !(progress == null || progress.length === 0)
-    const intCurrent_progress = parseInt(current_progress);
-    switch (intCurrent_progress) {
+    //deploy
+    switch (parseInt(current_progress)) {
         case 0:
             NextStepVisibile = false
             if (Date.now() / 1000 >= props.product.order_close_date &&
@@ -141,6 +141,7 @@ const DeadlineScheduleControls = (props) => {
         // eslint-disable-next-line
         default:
             if (haveCustomSchedule) {
+                const intCurrent_progress = parseInt(current_progress);
                 if (intCurrent_progress === progress.length + 1) {
                     // NextStepTitle = "Deliveries Completed"
                     // CancelVisibile = false
