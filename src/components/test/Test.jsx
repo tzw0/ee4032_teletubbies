@@ -1,7 +1,7 @@
 import React from 'react'
 import Web3 from 'web3'
 import { useEffect, useState } from 'react';
-import { SMART_CONTRACT_ABI, SMART_CONTRACT_ADDRESS } from '../../config'
+import { SHOPPETH_ABI, SHOPPETH_ADDRESS } from '../../config'
 import { Button } from '@material-ui/core';
 
 export default function Test() {
@@ -10,7 +10,16 @@ export default function Test() {
     const [status, setStatus] = useState('pending..')
     const [varX, setVarX] = useState('loading..')
     const web3 = new Web3(Web3.givenProvider || "http://localhost:8545")
-    const smartContract = new web3.eth.Contract(SMART_CONTRACT_ABI, SMART_CONTRACT_ADDRESS)
+    const smartContract = new web3.eth.Contract(SHOPPETH_ABI, SHOPPETH_ADDRESS)
+
+    const ethEnabled = async () => {
+        if (window.ethereum) {
+            await window.ethereum.send('eth_requestAccounts');
+            window.web3 = new Web3(window.ethereum);
+            return true;
+        }
+        return false;
+    }
 
     smartContract.events.MyEvent({
         fromBlock: "latest"
@@ -61,6 +70,7 @@ export default function Test() {
 
     return (
         <div className="test">
+            <Button color="primary" variant="contained" onClick={() => ethEnabled()}>Login</Button>
             {account == null ? "you are not signed in" : "Welcome " + account}
             <p>your account: {account}</p>
             <p>your network: {network}</p>

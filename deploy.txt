@@ -1,0 +1,4 @@
+append [
+    "homepage": "https://tzw0.github.io/shoppeth",
+    ] to package.json
+To use a new shoppeth contract, paste corresponding data in src/config.js

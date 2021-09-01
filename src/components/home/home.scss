@@ -3,7 +3,25 @@
 .home{
     width: 100%;
 
+    span{
+        color: $secondaryColor;
+    }
+
+    .info{
+        color: $secondaryColor;
+        display: flex;
+        padding: 6px;
+        border: 1px solid $secondaryColor;
+        border-radius: 10px;
+        margin-top: 10px;
+        div{
+            display:block;
+        }
+
+    }
+
     .container{
+        margin-top: 30px;
         display: grid;
         grid-template-columns: repeat(auto-fill, 270px);
         justify-content: center;
@@ -24,7 +42,6 @@
     justify-content: center;
     color: $mainColor;
     position: relative;
-    cursor: pointer;
     transition: all .5s ease;
     overflow: hidden;
     background: $background;
@@ -104,6 +121,10 @@
                     z-index: 80;
                     background: $secondaryColorFaded;
 
+                    &.primary{
+                        background: $primaryColorFaded;
+                    }                    
+
                     .bar-fill {
                         border-radius: 30px;
                         height: 100%;
@@ -112,6 +133,10 @@
                         left: 0;
                         z-index: 80;
                         background: $secondaryColor;
+
+                        &.primary{
+                            background: $primaryColorFaded;
+                        }     
                     }
 
                     h4{
@@ -148,7 +173,7 @@
                 }
 
                 .delivery{
-                    color: $primaryColor;
+                    color: $secondaryColor;
                     position: absolute;
                     right: 10px;
                     display: flex;
@@ -164,10 +189,13 @@
         }
     }
 
-    &:hover{
-        border: 1px solid $primaryColor;
-        box-shadow: 0 13px 30px rgba(0,0,0,0.5);
-        transform: translateY(-10px);
+    &.active{
+        cursor: pointer;
+
+        &:hover{
+            border: 1px solid $primaryColor;
+            box-shadow: 0 13px 30px rgba(0,0,0,0.5);
+            transform: translateY(-10px);
+        }
     }
-    
 }

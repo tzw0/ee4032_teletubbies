@@ -1,32 +1,51 @@
 import './topbar.scss'
 import { Link } from 'react-router-dom'
-import { PrimaryColor, TopbarBackgroundColor, TopbarFontColor, TopbarIconSize } from '../../global'
+import { GlobalDomainPrefix, PrimaryColor, TopbarBackgroundColor, TopbarFontColor, TopbarIconSize } from '../../global'
 import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
 import LocalMallIcon from '@material-ui/icons/LocalMall';
-import AccountCircleIcon from '@material-ui/icons/AccountCircle';
+// import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import SearchIcon from '@material-ui/icons/Search';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import TextField from '@material-ui/core/TextField';
 import StoreIcon from '@material-ui/icons/Store';
+import { useState } from 'react';
 import { makeStyles } from '@material-ui/core';
 import { Tooltip } from '@material-ui/core';
+import { ReactComponent as Shoppeth } from './SHOPPETH.svg';
+import HomeIcon from '@material-ui/icons/Home';
+import { useHistory } from 'react-router-dom';
 
-const recentQueries = [
-    "Can query recent searches of user ",
-    "Or some generic categories",
-    "(if we got time)",
-    "Search result should stick upon page refresh",
-    "eg result 1",
-];
+export default function Topbar(props) {
+    let history = useHistory();
+    const [recentSearches, setRecentSearches] = useState(["all"])
+    const [recentSearchesSet, setRecentSearchesSet] = useState({ "all": true })
+    const addSearch = (search) => {
+        if (!recentSearchesSet[search]) {
+            setRecentSearches(oldSearches => [...oldSearches, search])
+            setRecentSearchesSet((prevState => ({
+                ...prevState,
+                [search]: true
+            })))
+        }
+    }
 
-export default function Topbar() {
+    const submitSearch = (value) => {
+        if (value == null || value === "") {
+            return
+        }
+        props.onKeywordChange(value);
+        addSearch(value);
+        history.push(GlobalDomainPrefix);
+    }
+
     const classes = UseAutocompleteStyles();
 
     return (
         <div className="topbar">
             <div className="left">
-                <Link to="/">
-                    Teletubbies
+                <Link to={GlobalDomainPrefix + "/"}>
+                    <img src="assets/logo.png" alt="" />
+                    <Shoppeth width={200} color="inherit" />
                 </Link >
             </div>
             <div className="center">
@@ -35,14 +54,15 @@ export default function Topbar() {
                     freeSolo
                     id="search-bar"
                     // disableClearable
-                    options={recentQueries.map((option) => option)}
+                    onChange={(event, value) => { submitSearch(value) }}
+                    options={recentSearches.map((option) => option)}
                     style={{ width: "100%", color: "white", display: "block", marginLeft: "auto", marginRight: "auto" }}
                     renderInput={(params) => (
                         <TextField
                             {...params}
                             margin="normal"
                             variant="outlined"
-                            placeholder="Search"
+                            placeholder={"Searching for... '" + props.keyword + "'"}
                             InputProps={{
                                 ...params.InputProps,
 
@@ -55,31 +75,38 @@ export default function Topbar() {
                         />
                     )}
                 />
-                <div className="search-btn">
-                    <SearchIcon fontSize="inherit" />
+                <div className="search-btn" >
+                    <Link to={GlobalDomainPrefix + "/"}>
+                        <SearchIcon fontSize="inherit" />
+                    </Link>
                 </div>
             </div>
             <div className="right">
-                <Link to="/store">
-                    <Tooltip title={<h5 style={{ fontSize: TopbarIconSize }}> My Store</h5>}>
+                <Link to={GlobalDomainPrefix + "/"}>
+                    <Tooltip title={<h5 style={{ fontSize: TopbarIconSize }}> Home</h5>}>
+                        < HomeIcon fontSize="inherit" />
+                    </Tooltip>
+                </Link>
+                <Link to={GlobalDomainPrefix + "/myshop"}>
+                    <Tooltip title={<h5 style={{ fontSize: TopbarIconSize }}> My Shop</h5>}>
                         < StoreIcon fontSize="inherit" />
                     </Tooltip>
                 </Link>
-                <Link to="/cart">
+                <Link to={GlobalDomainPrefix + "/cart"}>
                     <Tooltip title={<h5 style={{ fontSize: TopbarIconSize }}>Shopping Cart</h5>}>
                         <ShoppingCartIcon fontSize="inherit" />
                     </Tooltip>
                 </Link>
-                <Link to="/orders">
+                <Link to={GlobalDomainPrefix + "/orders"}>
                     <Tooltip title={<h5 style={{ fontSize: TopbarIconSize }}> My Orders</h5>}>
                         <LocalMallIcon fontSize="inherit" />
                     </Tooltip>
                 </Link>
-                <Link to="/account">
+                {/* <Link to="/account">
                     <Tooltip title={<h5 style={{ fontSize: TopbarIconSize }}> My Account</h5>}>
                         <AccountCircleIcon fontSize="inherit" />
                     </Tooltip>
-                </Link>
+                </Link> */}
             </div>
         </div>
     )
