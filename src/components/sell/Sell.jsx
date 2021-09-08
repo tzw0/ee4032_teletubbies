@@ -65,7 +65,7 @@ export const DeadlineSchedule = (props) => {
             "deadline": epochToDate(product.promised_deadline),
         })
 
-    const stepperData = product.user_item_data[1] < 0 ? stepperDataRefunded : stepperDataDelivered
+    const stepperData = parseInt(product.user_item_data[1]) < 0 ? stepperDataRefunded : stepperDataDelivered
 
     const getFormattedIcon = (OriginalIcon) => {
         const formattedIcon = (props) => {
@@ -81,7 +81,7 @@ export const DeadlineSchedule = (props) => {
     }
 
     const currentStatus = product.production_status === "ORDERS_CANCELLED" ? "PRODUCT CANCELLED" : stepperData[product.current_progress].title
-    const activeStep = parseInt(product.current_progress)
+    const activeStep = parseInt(product.user_item_data[1]) <= 0 ? stepperData.length - 1 : parseInt(product.current_progress)
 
     return (
         <div className="deadline-schedule">
