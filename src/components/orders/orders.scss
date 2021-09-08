@@ -18,6 +18,11 @@
             margin: 25px auto;
             width: 100%;
             overflow: auto;
+
+            .flex-column {
+                display: flex;
+                flex-direction: column;
+            }
         }
     }
 }

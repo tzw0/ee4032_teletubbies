@@ -32,24 +32,26 @@ export default function Orders(props) {
                                         <div className="order-status">
                                             <DeadlineSchedule product={product} canReceive />
                                         </div>
-                                        {product.production_status === "ORDERS_CLOSED" && parseInt(product.user_item_data[1]) > 0 ?
-                                            <div>
-                                                <br />
-                                                <Button onClick={() => BuyerReceived(product.product_address)} className="btn" color="inherit" variant="outlined" >Received!</Button>
-                                                <br />
-                                                <br />
-
-                                            </div> : <div></div>
-                                        }
-                                        {
-                                            parseInt(product.user_item_data[1]) > 0 && Date.now() / 1000 >= product.promised_deadline ?
+                                        <div className="flex-column">
+                                            {product.production_status === "ORDERS_CLOSED" && parseInt(product.user_item_data[1]) > 0 ?
                                                 <div>
-                                                    <Button onClick={() => BuyerRequestRefund(product.product_address)} className="btn" color="inherit" variant="outlined" >Request Refund</Button>
                                                     <br />
-                                                    <span>*Refund will only succeed once the 'Deliveries Completed' deadline is reached*</span>
-                                                </div>
-                                                : <div></div>
-                                        }
+                                                    <Button onClick={() => BuyerReceived(product.product_address)} className="btn" color="inherit" variant="outlined" >Received!</Button>
+                                                    <br />
+                                                    <br />
+
+                                                </div> : <div></div>
+                                            }
+                                            {
+                                                parseInt(product.user_item_data[1]) > 0 && Date.now() / 1000 >= product.promised_deadline ?
+                                                    <div>
+                                                        <Button onClick={() => BuyerRequestRefund(product.product_address)} className="btn" color="inherit" variant="outlined" >Request Refund</Button>
+                                                        <br />
+                                                        <span>*Refund will only succeed once the 'Deliveries Completed' deadline is reached*</span>
+                                                    </div>
+                                                    : <div></div>
+                                            }
+                                        </div>
                                     </div>
                                 )))}
             </div>
