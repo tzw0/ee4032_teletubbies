@@ -128,7 +128,7 @@ function App() {
             <Route path={GlobalDomainPrefix + "/cart"} > <Cart products={cartProducts} productsQuantity={cartProductsQuantity} addToCart={addToCart} removeFromCart={removeFromCart} clearCart={clearCart} /></Route>
             {/* <Route path={"/test"} component={Test}> */}
             {/* </Route> */}
-            <Route path={[GlobalDomainPrefix, "/"]}> <Home products={browsedData} keyword={keyword} addToCart={addToCart} /> </Route>
+            <Route path={[GlobalDomainPrefix, "/"]}> <Home products={browsedData} orders={orderData} keyword={keyword} addToCart={addToCart} /> </Route>
           </Switch>
         </div>
       </Router>

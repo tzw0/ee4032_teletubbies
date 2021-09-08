@@ -6,6 +6,7 @@ import VerifiedUserIcon from '@material-ui/icons/VerifiedUser';
 import WifiTetheringIcon from '@material-ui/icons/WifiTethering';
 import ErrorOutlineIcon from '@material-ui/icons/ErrorOutline';
 import InfoIcon from '@material-ui/icons/Info';
+import ReportProblemIcon from '@material-ui/icons/ReportProblem';
 
 export default function Login() {
     const web3 = new Web3(Web3.givenProvider || "http://localhost:8545")
@@ -45,6 +46,7 @@ export default function Login() {
                     <h2><VerifiedUserIcon /> Logged in with address: <span> {account}</span> </h2>}
                 <p><WifiTetheringIcon /> Network: <span>{network}</span></p>
                 <h2><InfoIcon /> <strong>Contract interactions require some time to take effect. You can view the status on the Metamask plugin.</strong> </h2>
+                <h2><ReportProblemIcon /> <strong>You can only checkout once for each product campaign per account.</strong> </h2>
 
                 {account == null ?
                     <Button className="btn" color="inherit" variant="outlined" >Login with MetaMask</Button>

@@ -2,7 +2,7 @@ import { SHOPPETH_ABI, SHOPPETH_ADDRESS, PRODUCT_ABI, EVENT_EMITTER_ADDRESS, EVE
 import Web3 from 'web3'
 
 export const web3 = new Web3(Web3.givenProvider || "http://localhost:8545")
-export const shoppethContract = new web3.eth.Contract(SHOPPETH_ABI, SHOPPETH_ADDRESS)//, { gasLimit: 10000000 })
+export const shoppethContract = new web3.eth.Contract(SHOPPETH_ABI, SHOPPETH_ADDRESS) //, { gasLimit: 5000000 })
 export const eventEmitterContract = new web3.eth.Contract(EVENT_EMITTER_ABI, EVENT_EMITTER_ADDRESS)
 
 export const CreateProduct = async (
